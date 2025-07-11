@@ -5,9 +5,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Send } from "lucide-react";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 // GitHub SVG Component
@@ -28,9 +29,11 @@ const Google = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export function LoginForm() {
+  const router =useRouter();
   const [githubPending, startGithubTransition] = useTransition();
   const [googlePending, startGoogleTransition] = useTransition();
   const [emailPending, startEmailTransition] = useTransition();
+  const [email, setEmail] = useState("");
 
   async function signinWithGithub() {
     startGithubTransition(async () => {
@@ -74,14 +77,24 @@ export function LoginForm() {
     });
   }
 
-  function handleEmailLogin(e: React.FormEvent) {
-    e.preventDefault();
+  function signinWithEmail(){
     startEmailTransition(async () => {
-      // Simulate email login
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success("Check your email for a login link!");
-    });
+      await authClient.emailOtp.sendVerificationOtp({
+        email: email,
+        type: 'sign-in',
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('Email sent')
+            router.push(`/varify-request?email=${email}`)
+          },
+          onError: () => {
+            toast.error('Error send');
+          }
+        }
+      })
+    })
   }
+  
 
   return (
     <Card className="w-full max-w-md shadow-xl rounded-xl border-0 bg-background/90 backdrop-blur-sm dark:bg-gray-800/50">
@@ -139,13 +152,15 @@ export function LoginForm() {
         </div>
 
         {/* Email Login Form */}
-        <form onSubmit={handleEmailLogin} className="space-y-4">
+        
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">Email</Label>
             <Input 
               id="email" 
+              value={email}
               type="email" 
-              placeholder="name@example.com" 
+              placeholder="Enter your email: e.g.:name@example.com" 
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="py-5"
             />
@@ -153,19 +168,25 @@ export function LoginForm() {
           
           <Button 
             type="submit" 
-            disabled={emailPending || githubPending || googlePending}
+            disabled={ emailPending || githubPending || googlePending }
+            onClick={signinWithEmail}
             className="w-full py-5"
           >
-            {emailPending ? (
+            { emailPending ? (
               <>
                 <Loader2 className="mr-2 size-4 animate-spin" />
                 Sending login link...
               </>
             ) : (
-              "Continue with Email"
+              <>
+                <Mail className="size-4"/>
+                <samp>
+                  Continue with Email
+                </samp>
+              </>
             )}
           </Button>
-        </form>
+       
       </CardContent>
 
       {/* <CardFooter className="flex justify-center">
