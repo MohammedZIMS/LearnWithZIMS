@@ -28,10 +28,10 @@ export default function Home() {
       {session ? (
         <>
           <p>{session.user.name}</p>
-          <Button onClick={signout}>Logout</Button>
+          <Button onClick={signout} className="bg-red-700 hover:bg-red-500">Logout</Button>
         </>
       ) : (
-        <Button>Login</Button>
+        <Button className="bg-blue-600 hover:bg-blue-500">Login</Button>
       )}
     </div>
   );
