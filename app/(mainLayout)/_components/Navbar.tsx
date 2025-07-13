@@ -26,19 +26,7 @@ const navigationItems = [
 ]
 
 export function Navbar() {
-    const router = useRouter();
     const { data: session, isPending } = authClient.useSession();
-
-    async function signout() {
-        await authClient.signOut({
-            fetchOptions: {
-                onSuccess: () => {
-                    router.push("/");
-                    toast.success("Signout successfuly");
-                },
-            },
-        });
-    }
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

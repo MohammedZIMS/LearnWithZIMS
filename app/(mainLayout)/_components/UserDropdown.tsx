@@ -2,6 +2,7 @@ import { ModeToggle } from "@/components/ModeToggleButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useSignout } from "@/hooks/use-signout";
 import { authClient } from "@/lib/auth-client";
 import { BookOpen, Home, LayoutDashboard, LogIn, LogOut } from "lucide-react";
 import Link from "next/link";
@@ -15,19 +16,8 @@ const navigationItems = [
 ]
 
 export function UserDropdown() {
-    const router = useRouter();
     const { data: session, isPending } = authClient.useSession();
-
-    async function signout() {
-        await authClient.signOut({
-            fetchOptions: {
-                onSuccess: () => {
-                    router.push("/");
-                    toast.success("Signout successfuly");
-                },
-            },
-        });
-    }
+    const handleSignout = useSignout();
 
     return (
         <>
@@ -76,7 +66,7 @@ export function UserDropdown() {
                             ))}
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={signout} className="cursor-pointer">
+                        <DropdownMenuItem onClick={handleSignout} className="cursor-pointer">
                             <LogOut className="w-4 h-4 mr-2" />
                             <samp>Logout</samp>
                         </DropdownMenuItem>
