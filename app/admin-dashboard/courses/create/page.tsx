@@ -3,7 +3,7 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { courseCategories, CourseLevel, CourseSchem, CourseSchemType, CourseStatus } from "@/lib/zodSchemas";
-import { ArrowLeft, PlusIcon, SparkleIcon, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, PlusIcon, SparkleIcon, Image as ImageIcon, Upload } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import { Uploader } from "@/components/fileUploader/Uploader";
 
 export default function CourseCreatePage() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -294,7 +295,11 @@ export default function CourseCreatePage() {
                                 render={() => (
                                     <FormItem>
                                         <FormLabel className="block mb-3">Course Thumbnail <span className="text-red-500">*</span></FormLabel>
-                                        <div className="flex flex-col md:flex-row gap-6">
+                                        <FormControl>
+                                            <Uploader/>
+                                        </FormControl>
+                                        <FormMessage/>
+                                        {/* <div className="flex flex-col md:flex-row gap-6">
                                             <div className="flex-1">
                                                 <Label
                                                     htmlFor="thumbnail-upload"
@@ -323,7 +328,7 @@ export default function CourseCreatePage() {
                                                     </div>
                                                 </div>
                                             )}
-                                        </div>
+                                        </div> */}
                                     </FormItem>
                                 )}
                             />
