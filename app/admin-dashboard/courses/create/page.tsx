@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import { ImageUploader } from "@/components/fileUploader/ImageUploader";
 import { Uploader } from "@/components/fileUploader/Uploader";
 
 export default function CourseCreatePage() {
@@ -296,6 +297,7 @@ export default function CourseCreatePage() {
                                     <FormItem>
                                         <FormLabel className="block mb-3">Course Thumbnail <span className="text-red-500">*</span></FormLabel>
                                         <FormControl>
+                                            {/* <ImageUploader/> */}
                                             <Uploader/>
                                         </FormControl>
                                         <FormMessage/>
