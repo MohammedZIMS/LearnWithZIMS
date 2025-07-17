@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { RenderEmptyState, RenderErrorState } from "./RenderState";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
+import { resolve } from "path";
+import { rejects } from "assert";
 
 interface UploaderState {
     id: string | null;
@@ -33,7 +35,7 @@ export function Uploader() {
         fileType: 'image'
     });
 
-    function uploadFile() {
+    async function uploadFile(file: File) {
         setFileState((pev) => ({
             ...pev,
             uploading: true,
@@ -41,9 +43,81 @@ export function Uploader() {
         }));
 
         try {
-            
+            // 1. Get presigned URL
+            const presignedResponse = await fetch('/api/s3/upload', {
+                method: "POST",
+                headers: {"Content-type": "application/json"},
+                body: JSON.stringify({
+                    fileName: file.name,
+                    contentType: file.type,
+                    size: file.size,
+                    isImage: true,
+                }),
+            });
+
+            if (!presignedResponse.ok) {
+                toast.error("Failed to get presigned URL");
+                setFileState((pev) => ({
+                    ...pev,
+                    uploading: true,
+                    progress: 0,
+                }));
+
+                return;
+            }
+
+            const {presignedurl, Key} = await presignedResponse.json();
+
+            await new Promise<void>((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        const percentageCompleted = (event.loaded / event.total) * 100;
+
+                        setFileState((pev) => ({
+                            ...pev,
+                            progress: Math.round(percentageCompleted),
+                        }));
+
+                    }
+                }
+
+                xhr.onload = () => {
+                    if (xhr.status === 200 || xhr.status === 204) {
+                        setFileState((pev) => ({
+                            ...pev,
+                            progress: 100,
+                            uploading: false,
+                            key: Key,
+                        }));
+
+                        toast.success("File uploaded successfully!");
+
+                        resolve();
+                    } else {
+                        reject(new Error("Upload failed ..."))
+                    }
+
+                    xhr.onerror = () => {
+                        reject(new Error("Upload failed"))
+                    };
+
+                };
+                xhr.open("PUT", presignedurl);
+                xhr.setRequestHeader("Content-type", file.type);
+                xhr.send(file);
+                
+            })
         } catch (error) {
-            
+            toast.error("Something went wrong");
+
+            setFileState((pev) => ({
+                ...pev,
+                progress: 0,
+                error: true,
+                uploading: false,
+            }));
         }
     }
 
@@ -60,7 +134,9 @@ export function Uploader() {
                 id: uuidv4(),
                 isDeleting: false,
                 fileType: "image"
-            })
+            });
+
+            uploadFile(file);
         }
         
     },[]);
@@ -92,6 +168,22 @@ export function Uploader() {
         onDropRejected: rejectedFile
     });
 
+    function renderContent() {
+        if (fileState.uploading) {
+            return <h1>Uplading...</h1>
+        }
+
+        if (fileState.error) {
+            return <RenderErrorState/>
+        }
+
+        if (fileState.objectUrl) {
+            return <h1>Upload file</h1>
+        }
+
+        return <RenderEmptyState isDragActive={isDragAccept}/>
+    }
+
     return (
         <Card {...getRootProps()} className={cn(
             "relative border-2 border-dashed transition-colors duration-200 ease-in-out w-full h-64",
@@ -100,8 +192,7 @@ export function Uploader() {
             <CardContent className="flex items-center justify-center h-full w-full p-4">
 
             <input {...getInputProps()} />
-            <RenderEmptyState isDragActive={isDragAccept}/>
-            {/* <RenderErrorState/> */}
+            {renderContent()}
             </CardContent>
         </Card>
     )
