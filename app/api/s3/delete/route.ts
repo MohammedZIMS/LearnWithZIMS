@@ -1,12 +1,35 @@
-// /app/api/s3/delete/route.ts
-
+import { requireAdmin } from "@/app/data/admin/require-asmin";
+import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
 import { env } from "@/lib/env";
 import { S3 } from "@/lib/s3Client";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 
+const aj = arcjet.withRule(
+    detectBot({
+        mode: "LIVE",
+        allow: [],
+    })
+).withRule(
+    fixedWindow({
+        mode: "LIVE",
+        window: "1m",
+        max: 5,
+    })
+);
+
 export async function DELETE(request: Request) {
+
+    const session = await requireAdmin();
+
     try {
+
+        const decision = await aj.protect(request, { footprint: session?.user.id as string });
+
+        if (decision.isDenied()) {
+            return NextResponse.json({ error: "Hey bro this is not good" }, { status: 429 })
+        }
+
         const body = await request.json();
 
         const key = body.key;
