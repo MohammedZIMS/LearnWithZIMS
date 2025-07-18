@@ -3,24 +3,26 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { courseCategories, CourseLevel, CourseSchem, CourseSchemType, CourseStatus } from "@/lib/zodSchemas";
-import { ArrowLeft, PlusIcon, SparkleIcon, Image as ImageIcon, Upload } from "lucide-react";
+import { ArrowLeft, Loader2, PlusIcon, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import slugify from "slugify";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
-import { Label } from "@/components/ui/label";
+import { useTransition } from "react";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
-import { ImageUploader } from "@/components/fileUploader/ImageUploader";
 import { Uploader } from "@/components/fileUploader/Uploader";
+import { tryCatch } from "@/hooks/try-catch";
+import { CreateCourse } from "./actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CourseCreatePage() {
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter();
 
     const form = useForm<CourseSchemType>({
         resolver: zodResolver(CourseSchem),
@@ -29,7 +31,7 @@ export default function CourseCreatePage() {
             description: "",
             fileKey: "",
             price: 0,
-            duration: 0,
+            duration: 1,
             level: "Beginner",
             category: "Teaching & Academics",
             status: "Draft",
@@ -39,21 +41,22 @@ export default function CourseCreatePage() {
     });
 
     function onSubmit(values: CourseSchemType) {
-        setIsLoading(true);
-        console.log(values);
-        setTimeout(() => setIsLoading(false), 1500);
-    }
+        startTransition(async () => {
+            const { data, error } = await tryCatch(CreateCourse(values));
 
-    function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result as string);
-                form.setValue("fileKey", file.name);
-            };
-            reader.readAsDataURL(file);
-        }
+            if (error) {
+                toast.error("An unexpected error occurred while creating the course. Please try again.");
+                return;
+            }
+
+            if (data.status === "success") {
+                toast.success(data.message);
+                form.reset();
+                router.push("/admin-dashboard/courses");
+            } else if (data.status === "error") {
+                toast.error(data.message); // Fixed: Was incorrectly using toast.success
+            }
+        });
     }
 
     return (
@@ -97,13 +100,12 @@ export default function CourseCreatePage() {
                                         <FormItem>
                                             <FormLabel>Course Title <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Enter course title" {...field} className="py-6" />
+                                                <Input placeholder="Enter course title" {...field} className="py-6" disabled={isPending} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-
                                 <FormField
                                     control={form.control}
                                     name="slug"
@@ -112,17 +114,18 @@ export default function CourseCreatePage() {
                                             <FormLabel>Course Slug <span className="text-red-500">*</span></FormLabel>
                                             <div className="flex gap-2">
                                                 <FormControl>
-                                                    <Input placeholder="e.g., web-development-bootcamp" {...field} className="py-6" />
+                                                    <Input placeholder="e.g., web-development-bootcamp" {...field} className="py-6" disabled={isPending} />
                                                 </FormControl>
                                                 <Button
                                                     type="button"
                                                     variant="secondary"
                                                     className="py-6 border-2 border-blue-600 text-primary"
+                                                    disabled={isPending}
                                                     onClick={() => {
                                                         const titleValue = form.getValues("title");
                                                         if (titleValue) {
                                                             const slug = slugify(titleValue, { lower: true });
-                                                            form.setValue('slug', slug, { shouldValidate: true });
+                                                            form.setValue("slug", slug, { shouldValidate: true });
                                                         }
                                                     }}
                                                 >
@@ -143,33 +146,30 @@ export default function CourseCreatePage() {
                                     name="smallDescription"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Course Summary</FormLabel>
+                                            <FormLabel>Course Summary <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
-                                                <Textarea placeholder="Brief course summary..." className="min-h-[100px] py-4" {...field} />
+                                                <Textarea placeholder="Brief course summary..." className="min-h-[100px] py-4" {...field} disabled={isPending} />
                                             </FormControl>
-                                            <FormDescription>Shown in course listings.</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-
                                 <FormField
                                     control={form.control}
                                     name="description"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Course Description</FormLabel>
+                                            <FormLabel>Course Description <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <RichTextEditor field={field} />
                                             </FormControl>
-                                            <FormDescription>Displayed on course detail pages.</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
                             </div>
 
-                            {/* Details Grid */}
+                            {/* Course Details */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <FormField
                                     control={form.control}
@@ -177,7 +177,7 @@ export default function CourseCreatePage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Category <span className="text-red-500">*</span></FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
                                                 <FormControl>
                                                     <SelectTrigger className="py-6 w-full">
                                                         <SelectValue placeholder="Select Category" />
@@ -195,14 +195,13 @@ export default function CourseCreatePage() {
                                         </FormItem>
                                     )}
                                 />
-
                                 <FormField
                                     control={form.control}
                                     name="level"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Difficulty Level <span className="text-red-500">*</span></FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
                                                 <FormControl>
                                                     <SelectTrigger className="py-6 w-full">
                                                         <SelectValue placeholder="Select level" />
@@ -220,14 +219,13 @@ export default function CourseCreatePage() {
                                         </FormItem>
                                     )}
                                 />
-
                                 <FormField
                                     control={form.control}
                                     name="status"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Status <span className="text-red-500">*</span></FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value} disabled={isPending}>
                                                 <FormControl>
                                                     <SelectTrigger className="py-6 w-full">
                                                         <SelectValue placeholder="Select status" />
@@ -247,6 +245,7 @@ export default function CourseCreatePage() {
                                 />
                             </div>
 
+                            {/* Price & Duration */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <FormField
                                     control={form.control}
@@ -261,13 +260,13 @@ export default function CourseCreatePage() {
                                                     {...field}
                                                     className="py-6"
                                                     onChange={(e) => field.onChange(Number(e.target.value))}
+                                                    disabled={isPending}
                                                 />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-
                                 <FormField
                                     control={form.control}
                                     name="price"
@@ -281,6 +280,7 @@ export default function CourseCreatePage() {
                                                     {...field}
                                                     className="py-6"
                                                     onChange={(e) => field.onChange(Number(e.target.value))}
+                                                    disabled={isPending}
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -293,57 +293,29 @@ export default function CourseCreatePage() {
                             <FormField
                                 control={form.control}
                                 name="fileKey"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="block mb-3">Course Thumbnail <span className="text-red-500">*</span></FormLabel>
+                                        <FormLabel>Course Thumbnail <span className="text-red-500">*</span></FormLabel>
                                         <FormControl>
-                                            {/* <ImageUploader/> */}
-                                            <Uploader/>
+                                            <Uploader onChange={field.onChange} value={field.value} />
                                         </FormControl>
-                                        <FormMessage/>
-                                        {/* <div className="flex flex-col md:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <Label
-                                                    htmlFor="thumbnail-upload"
-                                                    className="border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer py-12 px-4 transition hover:border-primary"
-                                                >
-                                                    <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-full mb-4">
-                                                        <ImageIcon className="w-8 h-8 text-gray-500" />
-                                                    </div>
-                                                    <p className="font-medium mb-1">Upload thumbnail</p>
-                                                    <p className="text-sm text-muted-foreground text-center">PNG, JPG up to 2MB</p>
-                                                    <Input
-                                                        id="thumbnail-upload"
-                                                        type="file"
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={handleImageChange}
-                                                    />
-                                                </Label>
-                                            </div>
-
-                                            {previewUrl && (
-                                                <div className="flex flex-col items-center">
-                                                    <p className="text-sm text-muted-foreground mb-2">Preview</p>
-                                                    <div className="border rounded-lg overflow-hidden w-40 h-32">
-                                                        <img src={previewUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div> */}
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
                             {/* Actions */}
                             <div className="flex justify-between pt-6 border-t">
-                                <Button type="button" variant="outline" className="px-8 py-6" onClick={() => form.reset()}>
+                                <Button type="button" variant="outline" className="px-8 py-6" onClick={() => form.reset()} disabled={isPending}>
                                     Reset Form
                                 </Button>
 
-                                <Button type="submit" className="px-8 py-6 dark:text-white" disabled={isLoading}>
-                                    {isLoading ? (
-                                        <span className="animate-pulse">Creating Course...</span>
+                                <Button type="submit" className="px-8 py-6 dark:text-white" disabled={isPending}>
+                                    {isPending ? (
+                                        <>
+                                            <Loader2 className="animate-spin mr-2" />
+                                            Creating Course...
+                                        </>
                                     ) : (
                                         <>
                                             Create Course <PlusIcon className="ml-2 size-5" />
