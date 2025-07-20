@@ -7,15 +7,15 @@ export const CourseStatus = ["Draft", "Published", "Archived"] as const;
 export type CourseStatusType = typeof CourseStatus[number];
 
 export const courseCategories = [
-    "Development: Web or Mobile Development",
-    "Business: Finance, Entrepreneurship",
-    "IT & Software: Networking, Security, etc",
+    "Development",
+    "Business",
+    "IT & Software",
     "Office Productivity",
     "Personal Development",
-    "Design: Graphic or UX/UI Design",
-    "Marketing: Digital or Social Media Marketing",
-    "Photography: Digital Photography, Photo Editing",
-    "Music: Instrument, Music Production",
+    "Design",
+    "Marketing",
+    "Photography",
+    "Music",
     "Health & Fitness",
     "Teaching & Academics",
 ] as const;
