@@ -1,4 +1,5 @@
 import 'server-only';
+
 import { requireAdmin } from './require-asmin';
 import { prisma } from '@/lib/db';
 import { notFound } from 'next/navigation';
@@ -22,11 +23,30 @@ export async function adminGetCourse(id: string) {
             slug: true,
             smallDescription: true,
             category: true,
+            module: {
+                select: {
+                    id: true,
+                    title: true,
+                    position: true,
+                    lecture: {
+                        select: {
+                            id: true,
+                            title: true,
+                            description: true,
+                            thumbnailKey: true,
+                            position: true,
+                            videoUrl: true,
+                            documentUrl: true,
+                            
+                        }
+                    }
+                }
+            }
         },
     });
 
     if (!data) {
-        return notFound();
+        return notFound(); 
     }
 
     return data;

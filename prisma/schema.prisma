@@ -98,6 +98,7 @@ model Course {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   ratings Rating[]
+  module Module[]
 }
 
 model Rating {
@@ -120,4 +121,45 @@ enum CourseStatus {
   Draft
   Published
   Archived
+}
+
+model Module {
+  id String @id @default(uuid())
+
+
+  title String
+  position Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Course Course @relation(fields: [CourseId], references: [id])
+  CourseId String
+
+  lecture Lecture[]
+}
+
+model Lecture {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  
+  thumbnailKey String?
+  videoUrl    String?
+  documentUrl String? // For PDF or DOC uploads
+  position Int
+  
+  type        LectureType @default(Video)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Module      Module   @relation(fields: [moduleId], references: [id])
+  moduleId    String
+}
+
+enum LectureType {
+  Video
+  PDF
+  Document
 }
