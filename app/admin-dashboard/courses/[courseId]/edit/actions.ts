@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/type";
 import { CourseSchem, CourseSchemType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
+import { revalidatePath } from "next/cache";
 
 const aj = arcjet.withRule(
     detectBot({
@@ -71,4 +72,50 @@ export async function  editCourse(data: CourseSchemType, courseId: string): Prom
             message: "Failed to update course"
         }
     }
+}
+
+export async function reordweLecture(
+    moduleId: string,
+    lecture: {
+        id: string,
+        position: number
+    }[],
+    courseId: string,
+): Promise<ApiResponse> {
+    try {
+
+        if (!lecture || lecture.length === 0) {
+            return {
+                status: "error",
+                message: "No lecture provided for reordering",
+            }
+        }
+
+        const updates = lecture.map((lecture) => prisma.lecture.update({
+            where: {
+                id: lecture.id,
+                moduleId: moduleId,
+            },
+            data: {
+                position: lecture.position,
+            },
+        }));
+
+
+        await prisma.$transaction(updates);
+
+        revalidatePath(`/admin-dashboard/courses/${courseId}/edit`);
+
+        return {
+            status: "success",
+            message: "Lecture reordered successfully!"
+        }
+
+    } catch (error) {
+        return {
+            status: "error",
+            message: "Failed to reorder lecture"
+        }
+    }
+
 }

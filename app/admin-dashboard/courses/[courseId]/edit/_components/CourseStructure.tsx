@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { id } from "zod/v4/locales";
 
 interface iAppProps {
     data: AdminCourseSingularType;
@@ -80,6 +81,7 @@ export function CourseStructure({ data }: iAppProps) {
         const overId = over.id;
         const activeType = active.data.current?.type as 'module' | 'lecture';
         const overType = over.data.current?.type as 'module' | 'lecture';
+        const courseId = data.id;
 
         if (activeType === 'module') {
             let targetModuleId = overType === 'module' ? overId : over.data.current?.moduleId;
@@ -141,6 +143,13 @@ export function CourseStructure({ data }: iAppProps) {
             };
 
             setItems(newItems);
+
+            if (courseId) {
+                const lectureToUpdate = reorderedLecture.map((lecture) => ({
+                    id: lecture.id,
+                    position: lecture.order,
+                }));
+            }
         }
     }
 
