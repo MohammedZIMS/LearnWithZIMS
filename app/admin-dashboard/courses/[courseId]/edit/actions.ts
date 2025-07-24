@@ -74,14 +74,15 @@ export async function  editCourse(data: CourseSchemType, courseId: string): Prom
     }
 }
 
-export async function reordweLecture(
+export async function reorderLecture(
     moduleId: string,
     lecture: {
-        id: string,
+        id: string;
         position: number
     }[],
     courseId: string,
 ): Promise<ApiResponse> {
+    await requireAdmin();
     try {
 
         if (!lecture || lecture.length === 0) {
@@ -118,4 +119,45 @@ export async function reordweLecture(
         }
     }
 
+}
+
+export async function reorderModules(
+    courseId: string,
+    modules: { id: string; position: number}[]
+): Promise<ApiResponse> {
+    await requireAdmin();
+    try {
+
+        if (!modules || modules.length === 0) {
+            return {
+                status: 'error',
+                message: "No module provided for reordering"
+            };
+        }
+
+        const updates = modules.map((module) => prisma.module.update({
+            where: {
+                id: module.id,
+                CourseId: courseId,
+            },
+            data: {
+                position: module.position,
+            },
+        }));
+
+        await prisma.$transaction(updates);
+
+        revalidatePath(`/admin-dashboard/courses/${courseId}/edit`);
+
+        return {
+            status: 'success',
+            message: "Module reordered successfully!"
+        };
+        
+    } catch (error) {
+        return {
+            status: "error",
+            message: "Failed to reorder module",
+        }
+    }
 }

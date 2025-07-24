@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DndContext, DraggableSyntheticListeners, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors, DragEndEvent } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { CSS } from '@dnd-kit/utilities';
 import { ChevronDown, ChevronRight, FileText, GripVertical, Plus, Trash2 } from "lucide-react";
 import { AdminCourseSingularType } from "@/app/data/admin/admin-get-course";
@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { id } from "zod/v4/locales";
+import { reorderLecture, reorderModules } from "../actions";
 
 interface iAppProps {
     data: AdminCourseSingularType;
@@ -40,10 +41,28 @@ export function CourseStructure({ data }: iAppProps) {
             title: lecture.title,
             order: lecture.position,
         })),
-    }));
+    })) || [];
 
     const [items, setItems] = useState(initialItems);
     // console.log(items);
+
+    useEffect(() => {
+        setItems((prevItems) => {
+            const updatedItems = data.module.map((module) => ({
+                id: module.id,
+                title: module.title,
+                order: module.position,
+                isOpen: prevItems.find((item) => item.id === module.id)?.isOpen ?? true,
+                lecture: module.lecture.map((lecture) => ({
+                    id: lecture.id,
+                    title: lecture.title,
+                    order: lecture.position,
+                })),
+            })) || [];
+
+            return updatedItems;
+        });
+    }, [data]);
 
     function SortableItem({ id, children, data, className }: SortableItemProps) {
         const {
@@ -104,7 +123,30 @@ export function CourseStructure({ data }: iAppProps) {
                 order: index + 1,
             }));
 
+            const previousItems = [...items];
+
             setItems(reordered);
+
+            if (courseId) {
+                const moduleToUpdate = reordered.map((module) => ({
+                    id: module.id,
+                    position: module.order,
+                }));
+
+                const reorderPromise = () => reorderModules(courseId, moduleToUpdate);
+
+                toast.promise(reorderPromise(), {
+                    loading: "Reordering loading...",
+                    success: (result) => {
+                        if (result.status === "success") return result.message;
+                        throw new Error(result.message);
+                    },
+                    error: () => {
+                        setItems(previousItems);
+                        return "Failed to reorder module"
+                    }
+                });
+            }
         }
 
         if (activeType === 'lecture' && overType === 'lecture') {
@@ -142,6 +184,8 @@ export function CourseStructure({ data }: iAppProps) {
                 lecture: reorderedLecture,
             };
 
+            const previousItems = [...items];
+
             setItems(newItems);
 
             if (courseId) {
@@ -149,7 +193,23 @@ export function CourseStructure({ data }: iAppProps) {
                     id: lecture.id,
                     position: lecture.order,
                 }));
+
+                const reorderLecturesPromise = () => reorderLecture(moduleId, lectureToUpdate, courseId);
+
+                toast.promise(reorderLecturesPromise(), {
+                    loading: "Reordering loading...",
+                    success: (result) => {
+                        if (result.status === "success") return result.message;
+                        throw new Error(result.message);
+                    },
+                    error: () => {
+                        setItems(previousItems);
+                        return "Failed to reorder lecture"
+                    }
+                })
             }
+
+            return;
         }
     }
 
