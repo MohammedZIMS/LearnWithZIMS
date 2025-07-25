@@ -34,4 +34,11 @@ export const CourseSchem = z.object({
     status: z.enum(CourseStatus, { message: " Status is required" }),
 });
 
+export const moduleSchema = z.object({
+    name: z.string().min(3, {message: "Name must be al least 3 characters long"}),
+    courseId: z.string().uuid({message: "Invalid course id"}),
+
+})
+
 export type CourseSchemType = z.infer<typeof CourseSchem>;
+export type ModuleSchemaType = z.infer<typeof moduleSchema>;

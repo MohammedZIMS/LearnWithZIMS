@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { id } from "zod/v4/locales";
 import { reorderLecture, reorderModules } from "../actions";
+import { NewModuleModal } from "./NewModuleModal";
 
 interface iAppProps {
     data: AdminCourseSingularType;
@@ -237,10 +238,7 @@ export function CourseStructure({ data }: iAppProps) {
                     <CardTitle className="text-lg font-semibold">
                         Structure Module and Lecture
                     </CardTitle>
-                    <Button variant="outline" size="sm" className="flex items-center gap-1">
-                        <Plus className="size-4" />
-                        Add Module
-                    </Button>
+                    <NewModuleModal courseId={data.id}/>
                 </CardHeader>
                 <CardContent className="p-4">
                     <div className="space-y-4">
@@ -319,6 +317,7 @@ export function CourseStructure({ data }: iAppProps) {
                         </SortableContext>
                     </div>
                 </CardContent>
+                {/* <NewModuleModal courseId={data.id}/> */}
             </Card>
         </DndContext>
     );
