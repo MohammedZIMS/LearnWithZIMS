@@ -4,7 +4,7 @@ import { requireAdmin } from "@/app/data/admin/require-asmin";
 import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
 import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/type";
-import { CourseSchem, CourseSchemType } from "@/lib/zodSchemas";
+import { CourseSchem, CourseSchemType, moduleSchema, ModuleSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
 import { revalidatePath } from "next/cache";
 
@@ -159,5 +159,56 @@ export async function reorderModules(
             status: "error",
             message: "Failed to reorder module",
         }
+    }
+}
+
+export async function createModule(
+    values: ModuleSchemaType
+): Promise<ApiResponse> {
+    await requireAdmin();
+    try {
+
+        const result = moduleSchema.safeParse(values);
+
+        if (!result.success) {
+            return {
+                status: "error",
+                message: "Invalid data"
+            };
+        }
+
+        await prisma.$transaction(async (tx) => {
+            const maxPos = await tx.module.findFirst({
+                where: {
+                    CourseId: result.data.courseId,
+                },
+                select: {
+                    position: true,
+                },
+                orderBy: {
+                    position: "desc"
+                },
+            });
+
+            await tx.module.create({
+                data: {
+                    title: result.data.name,
+                    CourseId: result.data.courseId,
+                    position:( maxPos?.position ?? 0) + 1, 
+                },
+            });
+        });
+
+        revalidatePath(`/admin-dashboard/courses/${result.data.courseId}/edit`);
+        
+        return {
+            status: "success",
+            message: "Module create successfully!"
+        };
+    } catch (error) {
+        return {
+            status: "error",
+            message: "Failed to create module"
+        };
     }
 }
