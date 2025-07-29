@@ -4,7 +4,7 @@ import { requireAdmin } from "@/app/data/admin/require-asmin";
 import arcjet, { detectBot, fixedWindow } from "@/lib/arcjet";
 import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/type";
-import { CourseSchem, CourseSchemType, moduleSchema, ModuleSchemaType } from "@/lib/zodSchemas";
+import { CourseSchem, CourseSchemType, lectureSchema, LectureSchemaType, moduleSchema, ModuleSchemaType } from "@/lib/zodSchemas";
 import { request } from "@arcjet/next";
 import { revalidatePath } from "next/cache";
 
@@ -209,6 +209,60 @@ export async function createModule(
         return {
             status: "error",
             message: "Failed to create module"
+        };
+    }
+}
+
+export async function createLecture(
+    values: LectureSchemaType
+): Promise<ApiResponse> {
+    await requireAdmin();
+    try {
+
+        const result = lectureSchema.safeParse(values);
+
+        if (!result.success) {
+            return {
+                status: "error",
+                message: "Invalid data"
+            };
+        }
+
+        await prisma.$transaction(async (tx) => {
+            const maxPos = await tx.lecture.findFirst({
+                where: {
+                    moduleId: result.data.moduleId,
+                },
+                select: {
+                    position: true,
+                },
+                orderBy: {
+                    position: "desc"
+                },
+            });
+
+            await tx.lecture.create({
+                data: {
+                    title: result.data.name,
+                    description: result.data.description,
+                    videoUrl: result.data.videoUrl,
+                    thumbnailKey: result.data.thumbnailKey,
+                    moduleId: result.data.moduleId,
+                    position:( maxPos?.position ?? 0) + 1, 
+                },
+            });
+        });
+
+        revalidatePath(`/admin-dashboard/courses/${result.data.courseId}/edit`);
+        
+        return {
+            status: "success",
+            message: "Lecture create successfully!"
+        };
+    } catch (error) {
+        return {
+            status: "error",
+            message: "Failed to create lecture"
         };
     }
 }

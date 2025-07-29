@@ -1,3 +1,4 @@
+import { describe } from "node:test";
 import { z } from "zod";
 
 export const CourseLevel = ["Beginner", "Intermediate", "Advanced"] as const;
@@ -35,10 +36,22 @@ export const CourseSchem = z.object({
 });
 
 export const moduleSchema = z.object({
-    name: z.string().min(3, {message: "Name must be al least 3 characters long"}),
+    name: z.string().min(3, {message: "Name must be at least 3 characters long"}),
     courseId: z.string().uuid({message: "Invalid course id"}),
+
+})
+
+export const lectureSchema = z.object({
+    name: z.string().min(3, {message: "Name must be at least 3 characters long"}),
+    courseId: z.string().uuid({message: "Invalid course id"}),
+    moduleId: z.string().uuid({message: "Invalid module id"}),
+    description: z.string().min(3, {message: "Description must be at least 3 characters long"}).optional(),
+    thumbnailKey: z.string().optional(),
+    videoUrl: z.string().optional(),
+    documentUrl: z.string().optional(),
 
 })
 
 export type CourseSchemType = z.infer<typeof CourseSchem>;
 export type ModuleSchemaType = z.infer<typeof moduleSchema>;
+export type LectureSchemaType = z.infer<typeof lectureSchema>;

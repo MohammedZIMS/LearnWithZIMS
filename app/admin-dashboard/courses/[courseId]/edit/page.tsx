@@ -16,7 +16,7 @@ export default async function EditRoute({params}: {params: Params}) {
                 Edit Course: <samp className="text-primary">{data.title}</samp>
             </h1>
 
-            <Tabs defaultValue="basic-info" className="w-full">
+            <Tabs defaultValue="basic-strucutre" className="w-full">
                 <TabsList className="grid grid-cols-2 w-full">
                     <TabsTrigger value="basic-info">Basic Information</TabsTrigger>
                     <TabsTrigger value="basic-strucutre">Course Strucutre</TabsTrigger>

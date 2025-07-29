@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { id } from "zod/v4/locales";
 import { reorderLecture, reorderModules } from "../actions";
 import { NewModuleModal } from "./NewModuleModal";
+import { NewLectureModal } from "./NewLectureModal";
 
 interface iAppProps {
     data: AdminCourseSingularType;
@@ -268,9 +269,6 @@ export function CourseStructure({ data }: iAppProps) {
                                                     </div>
 
                                                     <div className="flex items-center gap-2">
-                                                        <Button variant="ghost" size="icon" title="Add Lecture">
-                                                            <Plus className="size-4" />
-                                                        </Button>
                                                         <Button variant="outline" size="icon" title="Delete Module">
                                                             <Trash2 className="size-4 text-destructive" />
                                                         </Button>
@@ -303,10 +301,9 @@ export function CourseStructure({ data }: iAppProps) {
                                                             ))}
                                                         </SortableContext>
 
-                                                        <Button className="w-full mt-1 border-t rounded-none border-0 bg-background hover:bg-accent" variant="ghost" size="sm">
-                                                            <Plus className="size-4 mr-2" />
-                                                            Add Lecture
-                                                        </Button>
+                                                        <NewLectureModal 
+                                                            moduleId={item.id} courseId={data.id} 
+                                                        />
                                                     </div>
                                                 </CollapsibleContent>
                                             </Collapsible>
