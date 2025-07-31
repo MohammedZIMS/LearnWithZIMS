@@ -17,6 +17,7 @@ import { id } from "zod/v4/locales";
 import { reorderLecture, reorderModules } from "../actions";
 import { NewModuleModal } from "./NewModuleModal";
 import { NewLectureModal } from "./NewLectureModal";
+import { DeleteLecture } from "./DeleteLecture";
 
 interface iAppProps {
     data: AdminCourseSingularType;
@@ -292,9 +293,7 @@ export function CourseStructure({ data }: iAppProps) {
                                                                                 </Link>
                                                                             </div>
 
-                                                                            <Button variant="outline" size="icon" title="Delete Lecture">
-                                                                                <Trash2 className="size-4 text-destructive" />
-                                                                            </Button>
+                                                                            <DeleteLecture/>
                                                                         </div>
                                                                     )}
                                                                 </SortableItem>
