@@ -266,3 +266,83 @@ export async function createLecture(
         };
     }
 }
+
+export async function deleteLecture({
+    moduleId,
+    courseId,
+    lectureId,
+}: {
+    moduleId: string;
+    courseId: string;
+    lectureId: string;
+}): Promise<ApiResponse> {
+    await requireAdmin()
+    try {
+        const moduleWithLectuer = await prisma.module.findUnique({
+            where: {
+                id: moduleId,
+            },
+            select: {
+                lecture: {
+                    orderBy: {
+                        position: "asc",
+                    },
+                    select: {
+                        id: true,
+                        position: true,
+                    },
+                },
+            },
+        });
+
+        if (!moduleWithLectuer) {
+            return{
+                status: "error",
+                message: "Module not found"
+            }
+        }
+
+        const lecture = moduleWithLectuer.lecture
+
+        const lectureToDelete = lecture.find((lecture) => lecture.id === lectureId);
+
+        if (!lectureToDelete) {
+            return {
+                status: "error",
+                message: "Lecture not found in the module."
+            }
+        }
+
+        const remainingLecture = lecture.filter((lecture) => lecture.id !== lectureId);
+
+        const updates = remainingLecture.map((lecture, index) => {
+            return prisma.lecture.update({
+                where: { id: lecture.id },
+                data: { position: index + 1 },
+            });
+        });
+
+        await prisma.$transaction([
+            ...updates,
+            prisma.lecture.delete({
+                where: {
+                    id: lectureId,
+                    moduleId: moduleId,
+                }
+            })
+        ])
+
+        revalidatePath(`/admin-dashboard/courses/${courseId}/edit`);
+
+        return{
+            status: "success",
+            message: "Lecture delete and position reordered successfully"
+        }
+        
+    } catch (error) {
+        return {
+            status: "error",
+            message: "Failed to delete lecture",
+        }
+    }
+}

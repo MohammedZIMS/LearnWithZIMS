@@ -293,7 +293,12 @@ export function CourseStructure({ data }: iAppProps) {
                                                                                 </Link>
                                                                             </div>
 
-                                                                            <DeleteLecture/>
+                                                                            <DeleteLecture 
+                                                                                moduleId={item.id} 
+                                                                                courseId={data.id} 
+                                                                                lectureId={lecture.id}
+                                                                                lectureTitle={lecture.title}
+                                                                            />
                                                                         </div>
                                                                     )}
                                                                 </SortableItem>
