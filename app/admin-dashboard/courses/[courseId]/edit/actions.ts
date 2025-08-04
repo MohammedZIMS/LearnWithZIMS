@@ -346,3 +346,72 @@ export async function deleteLecture({
         }
     }
 }
+
+
+export async function deleteModule({
+  courseId,
+  moduleId,
+}: {
+  courseId: string;
+  moduleId: string;
+}): Promise<ApiResponse> {
+  await requireAdmin();
+
+  try {
+    const courseWithModules = await prisma.course.findUnique({
+      where: { id: courseId },
+      select: {
+        module: {
+          orderBy: { position: "asc" },
+          select: { id: true, position: true },
+        },
+      },
+    });
+
+    if (!courseWithModules) {
+      return {
+        status: "error",
+        message: "Course not found",
+      };
+    }
+
+    const modules = courseWithModules.module;
+    const moduleToDelete = modules.find((mod) => mod.id === moduleId);
+
+    if (!moduleToDelete) {
+      return {
+        status: "error",
+        message: "Module not found in the course",
+      };
+    }
+
+    const remainingModules = modules.filter((module) => module.id !== moduleId);
+
+    const updates = remainingModules.map((module, index) => {
+      return prisma.module.update({
+        where: { id: module.id },
+        data: { position: index + 1 },
+      });
+    });
+
+    // Simply delete the module - lectures will cascade delete automatically
+    await prisma.$transaction([
+      ...updates,
+      prisma.module.delete({
+        where: { id: moduleId },
+      }),
+    ]);
+
+    revalidatePath(`/admin-dashboard/courses/${courseId}/edit`);
+
+    return {
+      status: "success",
+      message: "Module deleted and positions reordered successfully",
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: "Failed to delete module",
+    };
+  }
+}

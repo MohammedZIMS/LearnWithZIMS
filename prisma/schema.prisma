@@ -126,7 +126,6 @@ enum CourseStatus {
 model Module {
   id String @id @default(uuid())
 
-
   title String
   position Int
 
@@ -136,7 +135,7 @@ model Module {
   Course Course @relation(fields: [CourseId], references: [id])
   CourseId String
 
-  lecture Lecture[]
+  lecture Lecture[] 
 }
 
 model Lecture {

@@ -18,6 +18,7 @@ import { reorderLecture, reorderModules } from "../actions";
 import { NewModuleModal } from "./NewModuleModal";
 import { NewLectureModal } from "./NewLectureModal";
 import { DeleteLecture } from "./DeleteLecture";
+import { DeleteModule } from "./DeleteModule";
 
 interface iAppProps {
     data: AdminCourseSingularType;
@@ -270,9 +271,11 @@ export function CourseStructure({ data }: iAppProps) {
                                                     </div>
 
                                                     <div className="flex items-center gap-2">
-                                                        <Button variant="outline" size="icon" title="Delete Module">
-                                                            <Trash2 className="size-4 text-destructive" />
-                                                        </Button>
+                                                        <DeleteModule 
+                                                            moduleId={item.id} 
+                                                            courseId={data.id} 
+                                                            moduleTitle={item.title}
+                                                        />
                                                     </div>
                                                 </div>
 
