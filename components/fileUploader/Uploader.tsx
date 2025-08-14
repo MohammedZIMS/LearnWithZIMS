@@ -193,7 +193,7 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [],
           },
     maxFiles: 1,
-    maxSize: 5 * 1024 * 1024,
+    maxSize: fileTypeAccepted === 'image' ? 5 * 1024 * 1024 : 5000 * 1024 * 1024,
     onDropRejected: rejectedFile,
   });
 

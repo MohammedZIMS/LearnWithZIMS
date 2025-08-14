@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { updateLecture } from "../action";
 import { toast } from "sonner";
 import router from "next/router";
+import { redirect } from "next/navigation";
 
 interface iAppProps {
     data: AdminLectureType;
@@ -54,6 +55,7 @@ export function LectureForm({ moduleId, courseId, data }: iAppProps) {
 
             if (result.status === "success") {
                 toast.success(result.message);
+                redirect(`/admin-dashboard/courses/${courseId}/edit`)
             } else if (result.status === 'error') {
                 toast.error(result.message);
             }
