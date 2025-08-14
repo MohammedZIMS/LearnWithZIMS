@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CloudUpload, Image as ImageIcon, Loader2, X, CheckCircle2, AlertCircle } from "lucide-react";
+import { CloudUpload, Image as ImageIcon, Loader2, X, CheckCircle2, AlertCircle, FileText } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
@@ -18,7 +18,7 @@ export function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
       </div>
       <div>
         <h3 className="text-lg font-medium text-foreground mb-1">
-          {isDragActive ? "Drop your file here" : "Upload an image"}
+          {isDragActive ? "Drop your file here" : "Click to upload"}
         </h3>
         <p className="text-sm text-muted-foreground">
           PNG, JPG, or JPEG (Max: 5MB)
@@ -53,18 +53,39 @@ export function RenderErrorState() {
 }
 
 export function RenderUploadedState(
-  { previewUrl, isDeleting, handleRemoveFile } : 
-  { previewUrl: string; isDeleting: boolean; handleRemoveFile: () => void }
+  { previewUrl, isDeleting, handleRemoveFile, fileType } : 
+  { previewUrl: string; isDeleting: boolean; handleRemoveFile: () => void; fileType: "image" | "video" | "pdf" | "doc"; }
 ) {
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center">
-      <div className="relative w-full h-[180px]">
-        <Image 
-          src={previewUrl} 
-          alt="Uploaded file" 
-          fill
-          className="object-contain"
-        />
+      <div className="relative group w-full h-full flex items-center justify-center">
+        {fileType === 'video' ? (
+          <>
+          <video 
+            src={previewUrl} 
+            controls 
+            className="rounded-md h-full w-full" 
+            />
+            
+          </>
+        ) : fileType === 'image' ? (
+          <>
+          <Image 
+            src={previewUrl} 
+            alt="Uploaded file" 
+            fill
+            className="object-contain"
+            />
+          </>
+        ) : (
+          <>
+          <FileText className="size-16 text-primary" />
+            <span className="mt-3 text-sm font-medium max-w-[200px] truncate">
+              {previewUrl.split('/').pop()}
+            </span>
+          </>
+        )
+        }
         <div className="absolute top-0 right-0 z-10">
           <Button
             variant="destructive"

@@ -49,7 +49,7 @@ export const lectureSchema = z.object({
     thumbnailKey: z.string().optional(),
     videoUrl: z.string().optional(),
     documentUrl: z.string().optional(),
-
+    type: z.string().optional(),
 })
 
 export type CourseSchemType = z.infer<typeof CourseSchem>;

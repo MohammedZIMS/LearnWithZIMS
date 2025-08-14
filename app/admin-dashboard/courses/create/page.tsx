@@ -297,7 +297,7 @@ export default function CourseCreatePage() {
                                     <FormItem>
                                         <FormLabel>Course Thumbnail <span className="text-red-500">*</span></FormLabel>
                                         <FormControl>
-                                            <Uploader onChange={field.onChange} value={field.value} />
+                                            <Uploader onChange={field.onChange} value={field.value} fileTypeAccepted="image"/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
