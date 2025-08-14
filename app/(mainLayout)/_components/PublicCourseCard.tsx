@@ -66,11 +66,6 @@ export function PublicCourseCard({ data }: iAppProps) {
             {data.title}
           </Link>
 
-          {/* Description */}
-          <p className="line-clamp-3 text-sm text-muted-foreground">
-            {data.smallDescription}
-          </p>
-
           {/* Duration & Category */}
           <div className="mt-4 flex items-center gap-x-5">
             <div className="flex items-center gap-x-2">
@@ -91,6 +86,11 @@ export function PublicCourseCard({ data }: iAppProps) {
             </span>
           </div>
         </div>
+
+        {/* Description */}
+        <p className="line-clamp-3 text-sm text-muted-foreground">
+          {data.smallDescription}
+        </p>
         
         </CardContent>
 
