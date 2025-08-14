@@ -71,7 +71,7 @@ export default function DeleteCourseRoute() {
             variant="destructive"
             onClick={onSubmit}
             disabled={pending}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
           >
             {pending ? (
               <>

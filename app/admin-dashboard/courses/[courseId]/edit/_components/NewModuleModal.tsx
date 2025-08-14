@@ -69,7 +69,7 @@ export function NewModuleModal({ courseId }: { courseId: string }) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-1.5">
+        <Button variant="outline" size="sm" className="flex items-center gap-1.5 cursor-pointer">
           <Plus className="size-4" />
           Add Module
         </Button>

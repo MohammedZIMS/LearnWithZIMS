@@ -70,7 +70,7 @@ export function NewLectureModal({ courseId, moduleId }: { courseId: string, modu
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="w-full justify-center gap-1">
+        <Button variant="ghost" size="sm" className="w-full justify-center gap-1 cursor-pointer">
           <Plus className="size-4" />
           Add Lecture
         </Button>

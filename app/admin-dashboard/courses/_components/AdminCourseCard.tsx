@@ -133,7 +133,7 @@ export function AdminCourseCard({ data }: iAppProps) {
 
                             <div className="font-semibold flex items-center">
                                 <DollarSign className="size-4 mr-1" />
-                                {data.price > 0 ? `$${data.price.toFixed(2)}` : "Free"}
+                                {data.price > 0 ? `${data.price.toFixed(2)}` : "Free"}
                             </div>
                         </div>
                     </CardContent>

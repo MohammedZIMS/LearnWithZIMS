@@ -274,7 +274,7 @@ export function EditCourseForm({data}: iAppProps) {
                         <FormItem>
                             <FormLabel>Course Thumbnail <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
-                                <Uploader onChange={field.onChange} value={field.value} />
+                                <Uploader onChange={field.onChange} value={field.value} fileTypeAccepted="image"/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -283,11 +283,11 @@ export function EditCourseForm({data}: iAppProps) {
 
                 {/* Actions */}
                 <div className="flex justify-between pt-6 border-t">
-                    <Button type="button" variant="outline" className="px-8 py-6" onClick={() => form.reset()} disabled={isPending}>
+                    <Button type="button" variant="outline" className="px-8 py-6 cursor-pointer" onClick={() => form.reset()} disabled={isPending}>
                         Reset Form
                     </Button>
 
-                    <Button type="submit" className="px-8 py-6 dark:text-white" disabled={isPending}>
+                    <Button type="submit" className="px-8 py-6 dark:text-white cursor-pointer" disabled={isPending}>
                         {isPending ? (
                             <>
                                 <Loader2 className="animate-spin mr-2" />
