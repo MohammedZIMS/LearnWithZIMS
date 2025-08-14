@@ -18,25 +18,28 @@ export default async function CoursesPage() {
             </div>
 
             {
-            data.length === 0 ? (
-                <EmptyState 
-                    title="No Courses found" 
-                    description="Create a new course to get strated"
-                    buttonTxet="Create Course"
-                    href="/admin-dashboard/courses/create"
-                />
-            ):(
-                <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-7">
-                {data.map((course) => (
-                    <AdminCourseCard key={course.id} data={course}/>
-                ))}
-            </div>
-                </>
-            )
+                data.length === 0 ? (
+                    <EmptyState
+                        title="No Courses Yet"
+                        description="You haven't created any courses yet. Start by creating your first course to share your knowledge."
+                        buttonText="Create Course"
+                        href="/admin-dashboard/courses/create"
+                        iconType="file"
+                    />
+
+
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-7">
+                            {data.map((course) => (
+                                <AdminCourseCard key={course.id} data={course} />
+                            ))}
+                        </div>
+                    </>
+                )
             }
 
-            
+
         </>
     )
 }
