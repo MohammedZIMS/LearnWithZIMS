@@ -14,6 +14,7 @@ import { DollarSign, EditIcon, Eye, MoreVertical, Pencil, School, TimerIcon, Tra
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface iAppProps {
     data: AdminCourseType;
@@ -154,4 +155,56 @@ export function AdminCourseCard({ data }: iAppProps) {
             </div>
         </Card>
     );
+}
+
+export function AdminCourseCardSkeleton() {
+  return (
+    <Card className="group relative overflow-hidden transition-all border-0 shadow-sm py-0 gap-0 animate-pulse">
+      <div className="flex flex-col md:flex-row">
+        {/* Thumbnail Skeleton */}
+        <div className="relative md:w-2/5 aspect-video overflow-hidden">
+          <Skeleton className="absolute top-3 left-3 z-10 w-16 h-6 rounded-md" />
+          <Skeleton className="w-full h-full" />
+        </div>
+
+        {/* Content Skeleton */}
+        <div className="flex-1 flex flex-col relative md:w-3/5 p-4">
+          {/* Action menu skeleton */}
+          <div className="absolute top-3 right-3 z-10">
+            <Skeleton className="size-8 rounded-full" />
+          </div>
+
+          {/* Card header skeleton */}
+          <div className="space-y-2 mb-4">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+
+          {/* Badges skeleton */}
+          <div className="flex gap-2 mb-4">
+            <Skeleton className="h-6 w-20 rounded-full" />
+            <Skeleton className="h-6 w-24 rounded-full" />
+          </div>
+
+          {/* Duration and price skeleton */}
+          <div className="flex justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Skeleton className="size-4 rounded-full" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="size-4 rounded-full" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+          </div>
+
+          {/* Edit button skeleton */}
+          <div className="mt-auto">
+            <Skeleton className="w-full h-10 rounded-md" />
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
 }
