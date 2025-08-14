@@ -210,7 +210,7 @@ export function Uploader({ onChange, value, fileTypeAccepted }: iAppProps) {
         />
       );
     }
-    return <RenderEmptyState isDragActive={isDragAccept} />;
+    return <RenderEmptyState isDragActive={isDragAccept} fileType={fileTypeAccepted} />;
   }
 
   useEffect(() => {
