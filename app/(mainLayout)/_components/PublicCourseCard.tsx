@@ -2,6 +2,7 @@ import { PublicCourseType } from "@/app/data/course/get-all-courses";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { School, TimerIcon, Star } from "lucide-react";
 import Image from "next/image";
@@ -109,6 +110,72 @@ export function PublicCourseCard({ data }: iAppProps) {
           >
             Learn More
           </Link>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}
+
+
+export function PublicCourseCardSkeleton() {
+  return (
+    <div className="w-full max-w-sm">
+      <Card className="relative overflow-hidden rounded-xl dark:bg-gray-900 bg-white shadow-lg border border-gray-200 dark:border-gray-700">
+        {/* Badge Skeleton */}
+        <div className="absolute top-3 right-3 z-10">
+          <Skeleton className="h-6 w-16 rounded-md" />
+        </div>
+
+        {/* Thumbnail Skeleton */}
+        <div className="relative w-full aspect-video">
+          <Skeleton className="w-full h-full rounded-none" />
+        </div>
+
+        {/* Content Skeleton */}
+        <CardContent className="p-5 space-y-4">
+          {/* Title Skeleton */}
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-4/5" />
+            <Skeleton className="h-5 w-3/5" />
+          </div>
+
+          {/* Metadata Skeleton */}
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded-full" />
+              <Skeleton className="h-4 w-12" />
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded-full" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Skeleton key={i} className="h-4 w-4 rounded-sm" />
+                ))}
+              </div>
+              <Skeleton className="h-4 w-8" />
+            </div>
+          </div>
+
+          {/* Description Skeleton */}
+          <div className="space-y-2 pt-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+        </CardContent>
+
+        {/* Footer Skeleton */}
+        <CardFooter className="flex justify-between items-center p-5 border-t border-gray-200 dark:border-gray-700">
+          <div className="space-y-1">
+            <Skeleton className="h-6 w-16" />
+            <Skeleton className="h-4 w-10" />
+          </div>
+          <Skeleton className="h-10 w-24 rounded-md" />
         </CardFooter>
       </Card>
     </div>
