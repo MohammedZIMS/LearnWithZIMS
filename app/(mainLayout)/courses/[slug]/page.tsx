@@ -50,7 +50,7 @@ export default async function SlugPage({ params }: { params: Params }) {
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r dark:from-gray-900/90 dark:to-blue-900/90 from-blue-600/80 to-indigo-700/80 rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-r dark:from-gray-900/90 dark:to-blue-900/90 from-blue-600/80 to-indigo-700/80" />
 
         <div className="relative z-10 max-w-4xl mx-auto w-full">
           <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -194,6 +194,7 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </div>
               </div>
 
+              <Button className="my-2 w-full dark:text-white">Enroll Now!</Button>
 
               <div className="space-y-4">
                 <h4 className="font-medium">What you will get:</h4>
@@ -286,7 +287,6 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </ul>
               </div>
 
-              <Button className="mt-3 w-full dark:text-white">Enroll Now!</Button>
             </CardContent>
           </Card>
         </div>
