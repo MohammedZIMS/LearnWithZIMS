@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db";
-import { resolve } from "path";
 
 export async function getAllCourse() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
