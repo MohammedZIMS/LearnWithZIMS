@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import ip from "@arcjet/ip";
-import arcjet, {
+import arcjet from "@/lib/arcjet";
+import {
   type ArcjetDecision,
   type BotOptions,
   type EmailOptions,
@@ -14,10 +15,10 @@ import arcjet, {
 import { toNextJsHandler } from "better-auth/next-js";
 import { NextRequest } from "next/server";
 
-// ✅ Initialize Arcjet
+
 import arcjetInstance from "@/lib/arcjet";
 
-// ✅ Arcjet Rules Config
+
 const emailOptions = {
   mode: "LIVE",
   block: ["DISPOSABLE", "INVALID", "NO_MX_RECORDS"],
@@ -40,7 +41,6 @@ const signupOptions = {
   rateLimit: rateLimitOptions,
 } satisfies ProtectSignupOptions<[]>;
 
-// ✅ Protection Logic
 async function protect(req: NextRequest): Promise<ArcjetDecision> {
   const session = await auth.api.getSession({
     headers: req.headers,
@@ -68,11 +68,11 @@ async function protect(req: NextRequest): Promise<ArcjetDecision> {
   }
 }
 
-// ✅ Hook Auth
+
 const authHandlers = toNextJsHandler(auth.handler);
 export const { GET } = authHandlers;
 
-// ✅ Protected POST
+
 export const POST = async (req: NextRequest) => {
   const decision = await protect(req);
 
