@@ -7,6 +7,7 @@ import { env } from "@/lib/env";
 import { IconBook, IconChartBar, IconChevronDown, IconChevronRight, IconPlayerPlay } from "@tabler/icons-react";
 import { TimerIcon, School, Star, BookOpen, Calendar } from "lucide-react";
 import Image from "next/image";
+import { enrollInCourseAction } from "./action";
 
 type Params = Promise<{ slug: string }>
 
@@ -194,7 +195,14 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </div>
               </div>
 
-              <Button className="my-2 w-full dark:text-white">Enroll Now!</Button>
+              <form action={async () => {
+                "use server";
+                enrollInCourseAction(course.id);
+              }}>
+                <Button className="my-2 w-full dark:text-white">
+                  Enroll Now!
+                </Button>
+              </form>
 
               <div className="space-y-4">
                 <h4 className="font-medium">What you will get:</h4>
