@@ -1,19 +1,21 @@
 import { getIndividualCourse } from "@/app/data/course/get-course";
 import { RenderDescription } from "@/components/rich-text-editor/RenderDescription";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { env } from "@/lib/env";
 import { IconBook, IconChartBar, IconChevronDown, IconChevronRight, IconPlayerPlay } from "@tabler/icons-react";
 import { TimerIcon, School, Star, BookOpen, Calendar } from "lucide-react";
 import Image from "next/image";
-import { enrollInCourseAction } from "./action";
+import { checkIfCourseBouht } from "@/app/data/user/user-is-enrolled";
+import Link from "next/link";
+import { EnrollmentButton } from "./_components/EnrollmentButton";
 
 type Params = Promise<{ slug: string }>
 
 export default async function SlugPage({ params }: { params: Params }) {
   const { slug } = await params;
   const course = await getIndividualCourse(slug);
+  const isEnrolled = await checkIfCourseBouht(course.id);
 
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
@@ -195,14 +197,15 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </div>
               </div>
 
-              <form action={async () => {
-                "use server";
-                enrollInCourseAction(course.id);
-              }}>
-                <Button className="my-2 w-full dark:text-white">
-                  Enroll Now!
-                </Button>
-              </form>
+              
+              {
+                isEnrolled ? (
+                  <Link href={"/dashboard"}>Watch Course</Link>
+                ) : (
+                  <EnrollmentButton courseId={course.id}/>
+                )
+              }
+
 
               <div className="space-y-4">
                 <h4 className="font-medium">What you will get:</h4>
