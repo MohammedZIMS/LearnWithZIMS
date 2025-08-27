@@ -98,10 +98,17 @@ export default async function SlugPage({ params }: { params: Params }) {
             </div>
           </div>
 
-          <div className="mt-12 space-y-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold tracking-tight">Course Content</h2>
-              <div className="text-muted-foreground">
+          {/* Course Curriculum */}
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 md:p-8 mt-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-full">
+                  <IconBook className="text-indigo-600 dark:text-indigo-400" size={24} />
+                </div>
+                <h2 className="text-2xl font-bold">Course Curriculum</h2>
+              </div>
+              
+              <div className="text-muted-foreground bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg">
                 {course.module.length} Modules •{" "}
                 {course.module.reduce((t, m) => t + m.lecture.length, 0)} Lectures
               </div>
@@ -110,11 +117,11 @@ export default async function SlugPage({ params }: { params: Params }) {
             <div className="space-y-4">
               {course.module.map((module, index) => (
                 <Collapsible key={module.id} defaultOpen={index === 0}>
-                  <Card className="border shadow-sm hover:shadow-md transition-all">
+                  <Card className="border-0 shadow-md hover:shadow-lg transition-all overflow-hidden">
                     <CollapsibleTrigger asChild>
-                      <div className="flex items-center justify-between p-5 cursor-pointer hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between p-5 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <div className="flex items-center gap-4">
-                          <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
+                          <span className="flex size-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold">
                             {index + 1}
                           </span>
                           <div>
@@ -127,30 +134,34 @@ export default async function SlugPage({ params }: { params: Params }) {
                         </div>
 
                         <div className="flex items-center gap-3">
-
-                        <Badge>{module.lecture.length} Lecture{module.lecture.length > 1 && "s"}</Badge>
-                        <IconChevronRight className="size-5 text-muted-foreground data-[state=open]:hidden"/>
-                        <IconChevronDown className="size-5 text-muted-foreground hidden data-[state=open]:block" />
+                          <Badge variant="secondary">{module.lecture.length} Lessons</Badge>
+                          <IconChevronRight className="size-5 text-muted-foreground data-[state=open]:hidden" />
+                          <IconChevronDown className="size-5 text-muted-foreground hidden data-[state=open]:block" />
                         </div>
                       </div>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                      <div className="bg-muted/20">
-                        <div className="p-6 space-y-4">
+                      <div className="bg-gray-50 dark:bg-gray-800/50">
+                        <div className="p-5 space-y-3">
                           {module.lecture.map((lecture, lectureIndex) => (
                             <div
                               key={lecture.id}
-                              className="flex items-center gap-4 p-3 rounded-lg bg-background border hover:border-primary/30 hover:shadow-sm transition-all cursor-pointer"
+                              className="flex items-center gap-4 p-4 rounded-lg bg-white dark:bg-gray-900 border hover:border-blue-300 dark:hover:border-blue-500/50 hover:shadow-sm transition-all cursor-pointer"
                             >
-                              <div className="flex items-center justify-center size-8 rounded-full bg-primary/10 border border-primary/20">
-                                <IconPlayerPlay className="size-4 text-primary" />
+                              <div className="flex items-center justify-center size-10 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                                <IconPlayerPlay className="size-5 text-blue-600 dark:text-blue-400" />
                               </div>
                               <div className="flex-1">
                                 <p className="font-medium">{lecture.title}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  Lecture {lectureIndex + 1}
+                                <p className="text-sm text-muted-foreground">
+                                  Lesson {lectureIndex + 1}
                                 </p>
                               </div>
+                              {/* {lectureIndex === 0 && (
+                                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                                  Preview
+                                </span>
+                              )} */}
                             </div>
                           ))}
                         </div>
@@ -161,7 +172,6 @@ export default async function SlugPage({ params }: { params: Params }) {
               ))}
             </div>
           </div>
-
 
         </div>
 
@@ -197,83 +207,85 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </div>
               </div>
 
-              
-              {
-                isEnrolled ? (
-                  <Link href={"/dashboard"}>Watch Course</Link>
+              <div className="mb-8">
+                {course.price === 0 ? (
+                  <Link
+                    href="/dashboard"
+                    className="w-full block py-3 rounded-lg bg-green-600 text-white font-semibold text-center hover:bg-green-700 transition"
+                  >
+                    Start Learning
+                  </Link>
+                ) : isEnrolled ? (
+                  <Link
+                    href="/dashboard"
+                    className="w-full block py-3 rounded-lg bg-primary text-white font-semibold text-center hover:bg-primary/90 transition"
+                  >
+                    Continue Course
+                  </Link>
                 ) : (
-                  <EnrollmentButton courseId={course.id}/>
-                )
-              }
-
+                  <EnrollmentButton courseId={course.id} />
+                )}
+              </div>
 
               <div className="space-y-4">
                 <h4 className="font-medium">What you will get:</h4>
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                    <TimerIcon className="text-blue-600 dark:text-blue-400" />
+                <div className="space-y-4 mb-6">
+                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                    <TimerIcon className="text-blue-600 dark:text-blue-400 size-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Duration</p>
+                    <p className="text-sm text-muted-foreground">Duration</p>
                     <p className="font-medium">{course.duration} hours</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                    <IconChartBar className="text-blue-600 dark:text-blue-400" />
+                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                    <IconChartBar className="text-blue-600 dark:text-blue-400 size-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Diffcuality Level</p>
+                    <p className="text-sm text-muted-foreground">Difficulty Level</p>
                     <p className="font-medium">{course.level}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                    <School className="text-blue-600 dark:text-blue-400" />
+                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                    <School className="text-blue-600 dark:text-blue-400 size-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Category</p>
+                    <p className="text-sm text-muted-foreground">Category</p>
                     <p className="font-medium">{course.category}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                    <IconBook className="text-blue-600 dark:text-blue-400" />
+                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                    <IconBook className="text-blue-600 dark:text-blue-400 size-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Course Duration</p>
+                    <p className="text-sm text-muted-foreground">Total Lectures</p>
                     <p className="font-medium">
                       {course.module.reduce(
                         (total, module) => total + module.lecture.length,
                         0
-                      ) || 0}{" "} Lectures
+                      ) || 0}{" "} 
+                      Lectures
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                    <Calendar className="text-blue-600 dark:text-blue-400" />
+                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                    <Calendar className="text-blue-600 dark:text-blue-400 size-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Create Course</p>
-                    <p className="font-medium">{new Date(course.createdAt).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              
-
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 dark:bg-blue-900/40 p-2 rounded-lg">
-                    <Calendar className="text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Last Updated</p>
+                    <p className="text-sm text-muted-foreground">Last Updated</p>
                     <p className="font-medium">{new Date(course.updatedAt).toLocaleDateString()}</p>
                   </div>
                 </div>
+              </div>
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -309,10 +321,21 @@ export default async function SlugPage({ params }: { params: Params }) {
 }
 
 // Badge component for the header
-function Badge({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function Badge({ 
+  children, 
+  className,
+  variant = "default",
+  ...props 
+}: React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "secondary" }) {
+  const baseClasses = "px-3 py-1 rounded-full text-sm font-medium";
+  
+  const variantClasses = variant === "secondary" 
+    ? "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+    : "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200";
+  
   return (
-    <div
-      className={`px-3 py-1 rounded-full text-sm font-medium ${className}`}
+    <div 
+      className={`${baseClasses} ${variantClasses} ${className}`}
       {...props}
     >
       {children}
