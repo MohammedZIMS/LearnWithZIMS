@@ -117,7 +117,7 @@ export default async function SlugPage({ params }: { params: Params }) {
             <div className="space-y-4">
               {course.module.map((module, index) => (
                 <Collapsible key={module.id} defaultOpen={index === 0}>
-                  <Card className="border-0 shadow-md hover:shadow-lg transition-all overflow-hidden">
+                  <Card className="border-0 shadow-md hover:shadow-lg transition-all overflow-hidden gap-0 p-0">
                     <CollapsibleTrigger asChild>
                       <div className="flex items-center justify-between p-5 cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <div className="flex items-center gap-4">
@@ -134,9 +134,9 @@ export default async function SlugPage({ params }: { params: Params }) {
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <Badge variant="secondary">{module.lecture.length} Lessons</Badge>
-                          <IconChevronRight className="size-5 text-muted-foreground data-[state=open]:hidden" />
+                          <Badge variant="secondary">{module.lecture.length} Lecture</Badge>
                           <IconChevronDown className="size-5 text-muted-foreground hidden data-[state=open]:block" />
+                          <IconChevronRight className="size-5 text-muted-foreground data-[state=open]:hidden" />
                         </div>
                       </div>
                     </CollapsibleTrigger>
@@ -154,7 +154,7 @@ export default async function SlugPage({ params }: { params: Params }) {
                               <div className="flex-1">
                                 <p className="font-medium">{lecture.title}</p>
                                 <p className="text-sm text-muted-foreground">
-                                  Lesson {lectureIndex + 1}
+                                  Lecture {lectureIndex + 1}
                                 </p>
                               </div>
                               {/* {lectureIndex === 0 && (
@@ -218,7 +218,7 @@ export default async function SlugPage({ params }: { params: Params }) {
                 ) : isEnrolled ? (
                   <Link
                     href="/dashboard"
-                    className="w-full block py-3 rounded-lg bg-primary text-white font-semibold text-center hover:bg-primary/90 transition"
+                    className="w-full block py-3 rounded-lg bg-green-500 text-white font-semibold text-center hover:bg-green-600/90 transition"
                   >
                     Continue Course
                   </Link>
