@@ -92,6 +92,8 @@ model Course {
   slug             String      @unique
   fileKey          String
 
+  stripePriceId String? @unique 
+
   status CourseStatus @default(Draft)
 
   createdAt DateTime @default(now())
