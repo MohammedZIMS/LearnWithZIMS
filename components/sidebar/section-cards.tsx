@@ -1,100 +1,105 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-
-import { Badge } from "@/components/ui/badge"
+import { IconBook, IconListCheck, IconShoppingCart, IconUser } from "@tabler/icons-react"
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { adminGetDashboardStats } from "@/app/data/admin/admin-get-dashboard-stats"
 
-export function SectionCards() {
+export async function SectionCards() {
+
+  const {totalSignups, totalCustomers, totalCourses, totalLectures} = await adminGetDashboardStats();
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4 lg:px-6">
+      {/* Total Signups Card */}
+      <Card className="relative overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-600/10 dark:from-blue-400/5 dark:to-blue-500/10"></div>
+        <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-4">
+          <div className="space-y-1">
+            <CardDescription className="text-sm font-medium text-muted-foreground">
+              Total Signups
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold tabular-nums">
+              {totalSignups}
+            </CardTitle>
+          </div>
+          <div className="rounded-lg bg-blue-100 dark:bg-blue-900/30 p-3">
+            <IconUser className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+          </div>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
+        <CardFooter className="relative flex-col items-start gap-1 pt-0">
+          <p className="text-sm text-muted-foreground">Registered users on the platform</p>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
-            </Badge>
-          </CardAction>
+
+      {/* Total Customers Card */}
+      <Card className="relative overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-600/10 dark:from-green-400/5 dark:to-green-500/10"></div>
+        <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-4">
+          <div className="space-y-1">
+            <CardDescription className="text-sm font-medium text-muted-foreground">
+              Total Customers
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold tabular-nums">
+              {totalCustomers}
+            </CardTitle>
+          </div>
+          <div className="rounded-lg bg-green-100 dark:bg-green-900/30 p-3">
+            <IconShoppingCart className="h-6 w-6 text-green-600 dark:text-green-400" />
+          </div>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
-          </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
+        <CardFooter className="relative flex-col items-start gap-1 pt-0">
+          <p className="text-sm text-muted-foreground">
+            Users who have enrolled in courses
+          </p>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
+
+      {/* Total Courses Card */}
+      <Card className="relative overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-purple-600/10 dark:from-purple-400/5 dark:to-purple-500/10"></div>
+        <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-4">
+          <div className="space-y-1">
+            <CardDescription className="text-sm font-medium text-muted-foreground">
+              Total Courses
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold tabular-nums">
+              {totalCourses}
+            </CardTitle>
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="rounded-lg bg-purple-100 dark:bg-purple-900/30 p-3">
+            <IconBook className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+          </div>
+        </CardHeader>
+        <CardFooter className="relative flex-col items-start gap-1 pt-0">
+          <p className="text-sm text-muted-foreground">
+            Available courses on the platform
+          </p>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
+
+      {/* Total Lectures Card */}
+      <Card className="relative overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-amber-600/10 dark:from-amber-400/5 dark:to-amber-500/10"></div>
+        <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-4">
+          <div className="space-y-1">
+            <CardDescription className="text-sm font-medium text-muted-foreground">
+              Total Lectures
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold tabular-nums">
+              {totalLectures}
+            </CardTitle>
           </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="rounded-lg bg-amber-100 dark:bg-amber-900/30 p-3">
+            <IconListCheck className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+          </div>
+        </CardHeader>
+        <CardFooter className="relative flex-col items-start gap-1 pt-0">
+          <p className="text-sm text-muted-foreground">
+            Total learning content available
+          </p>
         </CardFooter>
       </Card>
     </div>
