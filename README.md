@@ -35,7 +35,16 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+Generate: This command generates an ORM schema or SQL migration file.
+```bash
+npx @better-auth/cli generate
+```
 
 ```bash
 pnpm dlx prisma db push
+```
+
+Resend
+```bash
+pnpm add resend
 ```
