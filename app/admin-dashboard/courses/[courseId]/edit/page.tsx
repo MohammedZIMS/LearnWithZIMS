@@ -9,7 +9,7 @@ type Params = {
 };
 
 export default async function EditRoute({ params }: { params: Params }) {
-  const { courseId } = params; // ✅ no await here
+  const { courseId } = await params; 
   const data = await adminGetCourse(courseId);
 
   return (
