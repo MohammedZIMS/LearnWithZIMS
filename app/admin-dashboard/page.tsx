@@ -1,4 +1,4 @@
-import { ChartAreaInteractive } from "@/components/sidebar/chart-area-interactive";
+import { ChartBarInteractive } from "@/components/sidebar/chart-bar-interactive";
 import { SectionCards } from "@/components/sidebar/section-cards";
 
 import data from "./data.json"
@@ -7,7 +7,7 @@ export default function AdminIndexPage() {
     <>
       <SectionCards />
       <div className="px-4 lg:px-6">
-        <ChartAreaInteractive />
+        <ChartBarInteractive />
       </div>
       
     </>
