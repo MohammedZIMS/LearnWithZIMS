@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-
 import { useIsMobile } from "@/hooks/use-mobile"
 import {
   Card,
@@ -18,29 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-
-export const description = "An interactive area chart"
-
-const chartData = [
-  {
-    date: '2025-10-16', enrollments: 12,
-  },
-  {
-    date: '2025-10-17', enrollments: 5,
-  },
-  {
-    date: '2025-10-18', enrollments: 19,
-  },
-  {
-    date: '2025-10-19', enrollments: 22,
-  },
-  {
-    date: '2025-10-20', enrollments: 22,
-  },
-  {
-    date: '2025-10-21', enrollments: 22,
-  },
-]
+export const description = "An interactive bar chart"
 
 const chartConfig = {
   enrollments: {
@@ -49,7 +26,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartBarInteractive() {
+// Expect an array, not a single object
+interface ChartBarInteractiveProps {
+  data: {
+    date: string
+    enrollments: number
+  }[]
+}
+
+export function ChartBarInteractive({ data }: ChartBarInteractiveProps) {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("90d")
 
@@ -59,33 +44,30 @@ export function ChartBarInteractive() {
     }
   }, [isMobile])
 
- 
-
+  const totalEnrollmentsNumber = React.useMemo(
+    () => data.reduce((acc, curr) => acc + curr.enrollments, 0),[data]
+  );
   return (
     <Card className="@container/card">
       <CardHeader>
         <CardTitle>Total Enrollment</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            Total Enrollment for the last 30 days: 1200
+            Total Enrollment for the last 30 days: {totalEnrollmentsNumber}
           </span>
-          <span className="@[540px]/card:hidden">Last 30 days: 1200</span>
+          <span className="@[540px]/card:hidden">Last 30 days: {totalEnrollmentsNumber}</span>
         </CardDescription>
-        
       </CardHeader>
+
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <BarChart 
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+          <BarChart
+            data={data}
+            margin={{ left: 12, right: 12 }}
           >
-            
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -101,6 +83,7 @@ export function ChartBarInteractive() {
                 })
               }}
             />
+
             <ChartTooltip
               cursor={false}
               defaultIndex={isMobile ? -1 : 10}
@@ -117,12 +100,11 @@ export function ChartBarInteractive() {
                 />
               }
             />
+
             <Bar
               dataKey="enrollments"
-              type="natural"
-              fill="var(--color-enrollments)"
-              stroke="var(--color-mobile)"
-              stackId="a"
+              fill="var(--color-primary)"
+              radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
