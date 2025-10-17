@@ -28,19 +28,18 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { authClient } from "@/lib/auth-client"
-import Link from "next/link"
-import { BookOpen, HomeIcon, LayoutDashboard } from "lucide-react"
-import { useSignout } from "@/hooks/use-signout"
 
-export function NavUser() {
-  const { isMobile } = useSidebar()
-  const { data: session, isPending} = authClient.useSession();
-  const handleSignout = useSignout();
-
-  if (isPending) {
-    return null;
+export function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
   }
+}) {
+  const { isMobile } = useSidebar()
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -50,20 +49,14 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={session?.user.image || "https://github.com/shadcn.png"} alt={session?.user.name} />
-                <AvatarFallback className="rounded-lg">
-                  {session?.user.name
-                    ?.split(" ")
-                    .map(n => n[0])
-                    .join("")
-                    .toUpperCase()}
-                </AvatarFallback>
+              <Avatar className="h-8 w-8 rounded-lg grayscale">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{session?.user.name}</span>
+                <span className="truncate font-medium">{user.name}</span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {session?.user.email}
+                  {user.email}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
@@ -78,51 +71,34 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={session?.user.image || "https://github.com/shadcn.png"} alt={session?.user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    {session?.user.name
-                    ?.split(" ")
-                    .map(n => n[0])
-                    .join("")
-                    .toUpperCase()}
-                  </AvatarFallback>
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    {session?.user.name && session.user.name.length > 0 
-                      ? session.user.name
-                      : session?.user.email.split("@")[0]
-                    }
-                  </span>
+                  <span className="truncate font-medium">{user.name}</span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {session?.user.email}
+                    {user.email}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link href={"/"}>
-                    <HomeIcon />
-                    Home
-                </Link>
+              <DropdownMenuItem>
+                <IconUserCircle />
+                Account
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={"/courses"}>
-                <BookOpen/>
-                Courses
-                </Link>
+              <DropdownMenuItem>
+                <IconCreditCard />
+                Billing
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={"/dashboard"}>
-                  <LayoutDashboard/>
-                  Dashboard
-                </Link>
+              <DropdownMenuItem>
+                <IconNotification />
+                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignout}>
+            <DropdownMenuItem>
               <IconLogout />
               Log out
             </DropdownMenuItem>
