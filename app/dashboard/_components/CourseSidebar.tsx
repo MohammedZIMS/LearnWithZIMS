@@ -1,8 +1,9 @@
 import { getCourseSidebarDataType } from "@/app/data/course/get-course-sidebar-data";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
 import { ChevronDown, Play } from "lucide-react";
+import { LectureItem } from "./LectureItem";
 
 interface iAppProps {
     course: getCourseSidebarDataType["course"];
@@ -34,8 +35,8 @@ export function CourseSidebar({ course }: iAppProps) {
             </div>
 
             <div className="py-4 pr-4 space-y-3">
-                {course.module.map((module) => (
-                    <Collapsible key={module.id}>
+                {course.module.map((module, index) => (
+                    <Collapsible key={module.id} defaultOpen={index === 0}>
                         <CollapsibleTrigger asChild>
                             <Button
                                 variant={"outline"}
@@ -46,12 +47,23 @@ export function CourseSidebar({ course }: iAppProps) {
                                 </div>
 
                                 <div className="flex-1 text-left min-w-0">
-                                    <p className="">
+                                    <p className="font-semibold text-sm truncate text-foreground">
                                         {module.position}: {module.title}
+                                    </p>
+
+                                    <p className="text-[10px] text-muted-foreground font-medium truncate">
+                                        {module.lecture.length} Lectures
                                     </p>
                                 </div>
                             </Button>
                         </CollapsibleTrigger>
+
+                        <CollapsibleContent className="mt-3 pl-6 border-l-2 space-y-3">
+                            {module.lecture.map((lecture) => (
+                                // <p key={lecture.id}>{lecture.title}</p>
+                                <LectureItem key={lecture.id} lecture={lecture} slug={course.slug} />
+                            ))}
+                        </CollapsibleContent>
                     </Collapsible>
                 ))}
             </div>
