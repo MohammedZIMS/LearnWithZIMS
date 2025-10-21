@@ -24,7 +24,7 @@ export function CourseContent({ data }: iAppProps) {
     const constructedThumbnail = thumbnailKey ? useConstructUrl(thumbnailKey) : null;
     const constructedDocUrl = documentUrl ? useConstructUrl(documentUrl) : null;
 
-    // 🎥 Case 1: Video lecture
+    // Case 1: Video lecture
     if (constructedVideoUrl) {
       return (
         <div className="aspect-video bg-black rounded-2xl overflow-hidden shadow-md">
@@ -42,7 +42,7 @@ export function CourseContent({ data }: iAppProps) {
       );
     }
 
-    // 📄 Case 2: PDF or document lecture
+    // Case 2: PDF or document lecture
     if (constructedDocUrl) {
       return (
         <div className="flex flex-col items-center justify-center text-center bg-muted rounded-2xl p-10 shadow-sm">
@@ -52,11 +52,7 @@ export function CourseContent({ data }: iAppProps) {
             This lecture contains a document or PDF file.
           </p>
           <Button asChild variant="outline" className="flex items-center gap-2">
-            <a
-              href={constructedDocUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={constructedDocUrl} target="_blank" rel="noopener noreferrer">
               <Download className="size-4" />
               Open / Download Document
             </a>
@@ -65,16 +61,26 @@ export function CourseContent({ data }: iAppProps) {
       );
     }
 
-    // 🪶 Case 3: No content yet
+    // Case 3: No content yet
     return (
       <div className="aspect-video bg-muted rounded-2xl flex flex-col items-center justify-center shadow-inner">
-        <BookIcon className="size-16 text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">This lecture does not have content yet.</p>
+        {constructedThumbnail ? (
+          <img
+            src={constructedThumbnail}
+            alt="Lecture thumbnail"
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        ) : (
+          <>
+            <BookIcon className="size-16 text-muted-foreground mb-4" />
+            <p className="text-muted-foreground">This lecture does not have content yet.</p>
+          </>
+        )}
       </div>
     );
   }
 
-  // 🧩 Safe JSON parsing
+  // Safe JSON parsing for description
   let parsedDescription = null;
   try {
     parsedDescription = data.description ? JSON.parse(data.description) : null;
