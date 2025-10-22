@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { ChevronDown, Play } from "lucide-react";
 import { LectureItem } from "./LectureItem";
 import { usePathname } from "next/navigation";
+import { useCourseProgress } from "@/hooks/use-course-progress";
 
 interface iAppProps {
     course: getCourseSidebarDataType["course"];
@@ -16,6 +17,8 @@ export function CourseSidebar({ course }: iAppProps) {
 
     const pathname = usePathname();
     const currentLectureId = pathname.split("/").pop();
+
+    const { completedLecture, totalLectures, progressPercentage} = useCourseProgress({ courseData: course});
 
     return (
         <div className="flex flex-col h-full">
@@ -34,10 +37,10 @@ export function CourseSidebar({ course }: iAppProps) {
                 <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                         <span>Progress</span>
-                        <span>4/10 lecture</span>
+                        <span>{completedLecture}/{totalLectures} lecture</span>
                     </div>
-                    <Progress value={55} className="h-1.5"/>
-                    <p className="text-muted-forgreground">55% complete</p>
+                    <Progress value={progressPercentage} className="h-1.5"/>
+                    <p className="text-muted-forgreground">{progressPercentage}% complete</p>
                 </div>
             </div>
 
