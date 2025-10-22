@@ -67,7 +67,15 @@ export function CourseSidebar({ course }: iAppProps) {
 
                         <CollapsibleContent className="mt-3 pl-6 border-l-2 space-y-3">
                             {module.lecture.map((lecture) => (
-                                <LectureItem key={lecture.id} lecture={lecture} slug={course.slug}  isActive={currentLectureId == lecture.id}/>
+                                <LectureItem 
+                                    key={lecture.id} 
+                                    lecture={lecture} 
+                                    slug={course.slug}  
+                                    isActive={currentLectureId == lecture.id}
+                                    completed={lecture.lectureProgress.find(
+                                        (progress) => progress.lectureId === lecture.id
+                                    ) ?.completed || false}
+                                />
                             ))}
                         </CollapsibleContent>
                     </Collapsible>

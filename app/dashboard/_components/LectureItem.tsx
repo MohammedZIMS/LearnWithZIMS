@@ -12,10 +12,9 @@ interface iAppProps {
     };
     slug: string;
     isActive?: boolean;
+    completed: boolean;
 }
-export function LectureItem({ lecture, slug, isActive }: iAppProps) {
-
-    const completed = false;
+export function LectureItem({ lecture, slug, isActive, completed }: iAppProps) {
 
     return (
         <Link

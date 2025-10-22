@@ -3,14 +3,23 @@
 import { LectureContentType } from "@/app/data/course/get-lecture-content";
 import { RenderDescription } from "@/components/rich-text-editor/RenderDescription";
 import { Button } from "@/components/ui/button";
+import { tryCatch } from "@/hooks/try-catch";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { BookIcon, CheckCircle, FileText, Download } from "lucide-react";
+import { useTransition } from "react";
+import { toast } from "sonner";
+import { markLectureComplete } from "../actions";
+import { useConfetti } from "@/hooks/use-confetti";
 
 interface iAppProps {
   data: LectureContentType;
 }
 
 export function CourseContent({ data }: iAppProps) {
+
+  const [pending, startTransition] = useTransition();
+  const { triggerConfetti } = useConfetti();
+
   function LectureViewer({
     thumbnailKey,
     videoUrl,
@@ -68,6 +77,7 @@ export function CourseContent({ data }: iAppProps) {
           <img
             src={constructedThumbnail}
             alt="Lecture thumbnail"
+            title="This lecture does not have content yet."
             className="w-full h-full object-cover rounded-2xl"
           />
         ) : (
@@ -78,6 +88,24 @@ export function CourseContent({ data }: iAppProps) {
         )}
       </div>
     );
+  }
+
+  function onSubmit() {
+    startTransition(async () => {
+      const { data: result, error } = await tryCatch(markLectureComplete(data.id, data.Module.Course.slug));
+
+      if (error) {
+        toast.error("An unexpected error occurred while creating the course. Please try again.");
+        return;
+      }
+
+      if (result.status === "success") {
+        toast.success(result.message);
+        triggerConfetti();
+      } else if (result.status === "error") {
+        toast.error(result.message);
+      }
+    });
   }
 
   // Safe JSON parsing for description
@@ -99,10 +127,18 @@ export function CourseContent({ data }: iAppProps) {
 
       {/* --- Mark Complete Section --- */}
       <div className="py-5 border-b mt-6 flex justify-between items-center">
-        <Button variant="outline" className="flex items-center gap-2">
-          <CheckCircle className="size-4 text-green-500" />
-          <span>Mark as Complete</span>
-        </Button>
+        {data.lectureProgress.length > 0 ? (
+          <Button variant={"outline"} className="bg-green-500/10 text-green-500 hover:text-green-600">
+            <CheckCircle className="size-4  text-green-500" />
+            Completed
+          </Button>
+        ) : (
+          <Button variant="outline" className="flex items-center gap-2" onClick={onSubmit} disabled={pending} >
+            <CheckCircle className="size-4 text-green-500" />
+            <span>Mark as Complete</span>
+          </Button>
+        )}
+
         <p className="text-sm text-muted-foreground">
           Position: <span className="font-medium">{data.position}</span>
         </p>

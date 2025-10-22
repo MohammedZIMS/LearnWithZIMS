@@ -19,9 +19,23 @@ export async function getLectureContent(lectureId: string) {
             videoUrl: true,
             documentUrl: true,
             position: true,
+            lectureProgress: {
+                where: {
+                    userId: session.id,
+                },
+                select: {
+                    completed: true,
+                    lectureId: true,
+                }
+            },
             Module: {
                 select: {
                     CourseId: true,
+                    Course: {
+                        select: {
+                            slug: true,
+                        },
+                    },
                 },
             },
         },
