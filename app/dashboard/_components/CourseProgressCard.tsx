@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useConstructUrl } from "@/hooks/use-construct-url";
 import { useCourseProgress } from "@/hooks/use-course-progress";
+import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,7 +45,7 @@ export function CourseProgressCard({ data }: iAppProps) {
   };
 
   return (
-    <Card className="flex-col sm:flex-row w-full rounded-xl overflow-hidden dark:bg-gray-900 bg-white shadow-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-2xl hover:-translate-y-1 duration-300">
+    <Card className="flex-col sm:flex-row w-full rounded-xl overflow-hidden dark:bg-gray-900 bg-white shadow-lg border border-gray-200 dark:border-gray-700 transition-all hover:shadow-2xl hover:-translate-y-1 duration-300 py-0 gap-0">
       {/* Thumbnail Section */}
       <div className="relative sm:w-1/3 w-full h-48 sm:h-auto">
         <Image
@@ -64,13 +65,14 @@ export function CourseProgressCard({ data }: iAppProps) {
           {/* Title */}
           <Link
             href={`/dashboard/${data.Course.slug}`}
-            className="block font-semibold text-lg sm:text-xl line-clamp-2 hover:text-primary transition-colors"
+            className="block font-semibold text-lg sm:text-xl line-clamp-2 hover:text-primary transition-colors truncate"
+            title={data.Course.title}
           >
             {data.Course.title}
           </Link>
 
           {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2">
+          <p className="text-sm text-muted-foreground line-clamp-2 truncate" title={data.Course.smallDescription}>
             {data.Course.smallDescription}
           </p>
 
@@ -97,15 +99,9 @@ export function CourseProgressCard({ data }: iAppProps) {
 
         {/* Footer */}
         <CardFooter className="flex justify-between items-center px-5 py-4 border-t border-gray-200 dark:border-gray-700">
-          <div>
-            <span className="text-xl font-bold text-blue-600">
-              {data.Course.price === 0 ? "Free" : `$${data.Course.price}`}
-            </span>
-            <p className="text-xs text-gray-500">Price</p>
-          </div>
           <Link
             href={`/dashboard/${data.Course.slug}`}
-            className={buttonVariants({ variant: "default" })}
+            className={cn(buttonVariants({ variant: "default"}), "w-full bg-green-600 hover:bg-green-400")}
           >
             Continue
           </Link>
