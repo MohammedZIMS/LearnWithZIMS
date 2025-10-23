@@ -46,11 +46,6 @@ export default function NotAdminRoute() {
             </div>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Button asChild variant="outline" className="py-6 flex-1">
-                <Link href="/support">
-                  Contact Support
-                </Link>
-              </Button>
               
               <Button asChild className="py-6 flex-1 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700">
                 <Link href="/" className="flex items-center justify-center gap-2">

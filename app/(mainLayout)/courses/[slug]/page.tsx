@@ -210,14 +210,14 @@ export default async function SlugPage({ params }: { params: Params }) {
               <div className="mb-8">
                 {course.price === 0 ? (
                   <Link
-                    href="/dashboard"
+                    href={`/dashboard/${slug}`}
                     className="w-full block py-3 rounded-lg bg-green-600 text-white font-semibold text-center hover:bg-green-700 transition"
                   >
                     Start Learning
                   </Link>
                 ) : isEnrolled ? (
                   <Link
-                    href="/dashboard"
+                    href={`/dashboard/${slug}`}
                     className="w-full block py-3 rounded-lg bg-green-500 text-white font-semibold text-center hover:bg-green-600/90 transition"
                   >
                     Continue Course
