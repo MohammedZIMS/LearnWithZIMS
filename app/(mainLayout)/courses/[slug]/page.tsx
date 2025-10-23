@@ -9,6 +9,7 @@ import Image from "next/image";
 import { checkIfCourseBouht } from "@/app/data/user/user-is-enrolled";
 import Link from "next/link";
 import { EnrollmentButton } from "./_components/EnrollmentButton";
+import { getUserReview } from "@/app/data/user/get-user-review";
 
 type Params = Promise<{ slug: string }>
 
@@ -16,6 +17,10 @@ export default async function SlugPage({ params }: { params: Params }) {
   const { slug } = await params;
   const course = await getIndividualCourse(slug);
   const isEnrolled = await checkIfCourseBouht(course.id);
+
+  // Fetch the course and its reviews
+  const reviewsData = await getUserReview(course.id);
+  const reviews = reviewsData.reviews;
 
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
@@ -107,7 +112,7 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </div>
                 <h2 className="text-2xl font-bold">Course Curriculum</h2>
               </div>
-              
+
               <div className="text-muted-foreground bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg">
                 {course.module.length} Modules •{" "}
                 {course.module.reduce((t, m) => t + m.lecture.length, 0)} Lectures
@@ -230,62 +235,62 @@ export default async function SlugPage({ params }: { params: Params }) {
               <div className="space-y-4">
                 <h4 className="font-medium">What you will get:</h4>
                 <div className="space-y-4 mb-6">
-                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                    <TimerIcon className="text-blue-600 dark:text-blue-400 size-5" />
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                      <TimerIcon className="text-blue-600 dark:text-blue-400 size-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Duration</p>
+                      <p className="font-medium">{course.duration} hours</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Duration</p>
-                    <p className="font-medium">{course.duration} hours</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                    <IconChartBar className="text-blue-600 dark:text-blue-400 size-5" />
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                      <IconChartBar className="text-blue-600 dark:text-blue-400 size-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Difficulty Level</p>
+                      <p className="font-medium">{course.level}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Difficulty Level</p>
-                    <p className="font-medium">{course.level}</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                    <School className="text-blue-600 dark:text-blue-400 size-5" />
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                      <School className="text-blue-600 dark:text-blue-400 size-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Category</p>
+                      <p className="font-medium">{course.category}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Category</p>
-                    <p className="font-medium">{course.category}</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                    <IconBook className="text-blue-600 dark:text-blue-400 size-5" />
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                      <IconBook className="text-blue-600 dark:text-blue-400 size-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Total Lectures</p>
+                      <p className="font-medium">
+                        {course.module.reduce(
+                          (total, module) => total + module.lecture.length,
+                          0
+                        ) || 0}{" "}
+                        Lectures
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Lectures</p>
-                    <p className="font-medium">
-                      {course.module.reduce(
-                        (total, module) => total + module.lecture.length,
-                        0
-                      ) || 0}{" "} 
-                      Lectures
-                    </p>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                    <Calendar className="text-blue-600 dark:text-blue-400 size-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Last Updated</p>
-                    <p className="font-medium">{new Date(course.updatedAt).toLocaleDateString()}</p>
+                  <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+                      <Calendar className="text-blue-600 dark:text-blue-400 size-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Last Updated</p>
+                      <p className="font-medium">{new Date(course.updatedAt).toLocaleDateString()}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
@@ -315,26 +320,46 @@ export default async function SlugPage({ params }: { params: Params }) {
         </div>
       </div>
 
+      {/* Reviews List bottom*/}
+      <div className="max-w-5xl mx-auto my-16 px-4 space-y-8">
+        <h2 className="text-3xl font-bold">Student Reviews</h2>
+        {reviews.length === 0 ? (
+          <p className="text-muted-foreground">No reviews yet.</p>
+        ) : (
+          reviews.map((rev) => (
+            <div key={rev.id} className="p-4 rounded-xl bg-white dark:bg-gray-900 shadow hover:shadow-md transition">
+              <div className="flex items-center gap-2 mb-2">
+                {Array.from({ length: rev.rating }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground">{rev.comment}</p>
+              <p className="text-xs text-gray-500 mt-1">— {rev.user?.name || "Anonymous"}</p>
+            </div>
+          ))
+        )}
+      </div>
+
 
     </div>
   );
 }
 
 // Badge component for the header
-function Badge({ 
-  children, 
+function Badge({
+  children,
   className,
   variant = "default",
-  ...props 
+  ...props
 }: React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "secondary" }) {
   const baseClasses = "px-3 py-1 rounded-full text-sm font-medium";
-  
-  const variantClasses = variant === "secondary" 
+
+  const variantClasses = variant === "secondary"
     ? "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
     : "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200";
-  
+
   return (
-    <div 
+    <div
       className={`${baseClasses} ${variantClasses} ${className}`}
       {...props}
     >
