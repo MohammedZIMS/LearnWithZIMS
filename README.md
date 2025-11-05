@@ -1,44 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Next.js Project
 
-## Getting Started
+This project is built using [Next.js](https://nextjs.org), bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-First, run the development server:
+---
+
+## 🧑‍💻 Getting Started
+
+### 1. Install Dependencies
+
+Using **pnpm** (recommended):
 
 ```bash
+pnpm install
+```
+
+Or using npm:
+
+```bash
+npm install
+```
+
+---
+
+### 2. Run the Development Server
+
+Start the local development server:
+
+```bash
+pnpm dev
+# or
 npm run dev
 # or
 yarn dev
 # or
-pnpm dev
-# or
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Project Setup
 
-## Learn More
+### Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env` file in the root directory and set up the required environment variables for your app.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### ORM / Database Setup
 
-Generate: This command generates an ORM schema or SQL migration file.
+Generate ORM schema or SQL migration files:
+
 ```bash
 npx @better-auth/cli generate
 ```
+
+Push your Prisma schema to the database:
 
 ```bash
 pnpm dlx prisma db push
 ```
 
-Resend
+---
+
+### 📧 Email Integration (Resend)
+
+Install the **Resend** package for email services:
+
 ```bash
 pnpm add resend
 ```
+
+---
+
+## 🗂️ Project Structure
+
+* `app/page.tsx` — Main entry point for the homepage.
+  You can start editing this file to see live updates.
+* `app/` — Contains all application routes and UI components.
+* `next.config.js` — Next.js configuration file.
+* `.env` — Environment variables (not committed to version control).
+
+---
+
+## 🧩 Fonts
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [**Geist**](https://vercel.com/font), a modern and elegant font family by Vercel.
+
+---
+
+## 📘 Learn More
+
+To learn more about Next.js, explore:
+
+* 📚 [Next.js Documentation](https://nextjs.org/docs) — Learn about Next.js features and APIs.
+* 🧠 [Learn Next.js](https://nextjs.org/learn) — Interactive Next.js tutorial.
+* 💻 [Next.js GitHub Repository](https://github.com/vercel/next.js) — Contribute and give feedback.
+
+---
