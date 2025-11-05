@@ -13,7 +13,7 @@ export async function GET(req: Request, context: { params: { courseId: string } 
 // POST a review
 export async function POST(req: Request, context: { params: { courseId: string } }) {
   const user = await requireUser();
-  const courseId = context.params.courseId;
+  const courseId = await context.params.courseId;
   const { rating, comment } = await req.json();
 
   try {

@@ -93,25 +93,6 @@ export default function Home() {
                 Explore Courses <ArrowRight className="ml-2 w-4 h-4" />
               </Link>
 
-              {session ? (
-                <Button
-                  onClick={signout}
-                  size="lg"
-                  className="bg-red-600 hover:bg-red-500 text-white font-bold shadow-lg transform transition hover:scale-105"
-                >
-                  Logout
-                </Button>
-              ) : (
-                <Link href={"/login"}>
-                  <Button
-                    size="lg"
-                    className="bg-white text-blue-900 hover:bg-blue-50 font-bold shadow-lg transform transition hover:scale-105"
-                  >
-                    Login
-                  </Button>
-                </Link>
-              )}
-
               <div className="hidden sm:block">
               </div>
             </div>

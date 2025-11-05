@@ -1,11 +1,8 @@
 "use client"
 
 import {
-  IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
-  IconUserCircle,
 } from "@tabler/icons-react"
 
 import {
@@ -51,7 +48,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={session?.user.image || "https://github.com/shadcn.png"} alt={session?.user.name} />
+                <AvatarImage src={session?.user.image || ""} alt={session?.user.name} />
                 <AvatarFallback className="rounded-lg">
                   {session?.user.name
                     ?.split(" ")
@@ -78,7 +75,7 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={session?.user.image || "https://github.com/shadcn.png"} alt={session?.user.name} />
+                  <AvatarImage src={session?.user.image || ""} alt={session?.user.name} />
                   <AvatarFallback className="rounded-lg">
                     {session?.user.name
                     ?.split(" ")

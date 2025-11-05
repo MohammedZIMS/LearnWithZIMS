@@ -42,7 +42,7 @@ export default async function DashboardPage() {
           </div>
           {enrolledCourses.length > 0 && (
             <Link
-              href="/dashboard/courses"
+              href="/courses"
               className={buttonVariants({ variant: "outline" })}
             >
               View All
