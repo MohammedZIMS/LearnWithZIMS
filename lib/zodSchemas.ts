@@ -9,16 +9,17 @@ export type CourseStatusType = typeof CourseStatus[number];
 
 export const courseCategories = [
     "Development",
-    "Business",
     "IT & Software",
-    "Office Productivity",
-    "Personal Development",
+    "Cybersecurity",
+    "Data Science",
+    "Machine Learning",
     "Design",
     "Marketing",
-    "Photography",
-    "Music",
-    "Health & Fitness",
-    "Teaching & Academics",
+    "Deep Learning",
+    "AI",
+    "Networking",
+    "Programming",
+    "Teaching",
 ] as const;
 export type CourseCategoryType = typeof courseCategories[number];
 

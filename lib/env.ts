@@ -1,6 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
- 
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
@@ -18,16 +18,18 @@ export const env = createEnv({
     AWS_ENDPOINT_URL_IAM: z.string().min(1),
     AWS_REGION: z.string().min(1),
     STRIPE_SECRET_KEY: z.string().min(1),
-    STRIPE_WEBHOOK_SECRET: z.string().min(1)
+    STRIPE_WEBHOOK_SECRET: z.string().min(1),
   },
 
   client: {
     NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES: z.string().min(1),
+    NEXT_PUBLIC_UPSTASH_SEARCH_REST_URL: z.string().url(),
+    NEXT_PUBLIC_UPSTASH_SEARCH_REST_TOKEN: z.string().min(1),
   },
-  
-  
-  // For Next.js >= 13.4.4, you only need to destructure client variables:
+
   experimental__runtimeEnv: {
     NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
+    NEXT_PUBLIC_UPSTASH_SEARCH_REST_URL: process.env.NEXT_PUBLIC_UPSTASH_SEARCH_REST_URL,
+    NEXT_PUBLIC_UPSTASH_SEARCH_REST_TOKEN: process.env.NEXT_PUBLIC_UPSTASH_SEARCH_REST_TOKEN,
   },
 });

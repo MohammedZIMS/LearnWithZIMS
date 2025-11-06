@@ -33,6 +33,7 @@ model User {
   banExpires DateTime?
 
   @@map("user")
+  certificates Certificate[]
 }
 
 model Session {
@@ -106,6 +107,8 @@ model Course {
   ratings Rating[]
   module Module[]
   enrollment Enrollment[]
+
+  certificates Certificate[]
 }
 
 model Rating {
@@ -213,4 +216,18 @@ model LectureProgress {
   lectureId String
 
   @@unique([userId, lectureId])
+}
+
+
+model Certificate {
+  id          String   @id @default(uuid())
+  userId      String
+  courseId    String
+  issuedAt    DateTime @default(now())
+  certificateUrl String?
+
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
 }

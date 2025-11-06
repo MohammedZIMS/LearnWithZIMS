@@ -1,6 +1,7 @@
 import { getCourseSidebarData } from "@/app/data/course/get-course-sidebar-data";
 import { redirect } from "next/navigation";
 
+
 interface iAppProps {
     params: Promise<{slug: string}>;
 }
@@ -16,7 +17,7 @@ export default async function CourseSlugRoute({ params }: iAppProps) {
     }
     return (
         <div className="flex items-center justify-between h-full text-center">
-            <h2 className="text-2xl font-bold mb-2">No Lexture available</h2>
+            <h2 className="text-2xl font-bold mb-2">No Lecture available</h2>
             <p>This course does not have any lecture</p>
         </div>
     )
