@@ -8,10 +8,11 @@ import { authClient } from "@/lib/auth-client";
 import { LayoutDashboard, Home, BookOpen, Shield, FileText } from "lucide-react";
 import { UserDropdown } from "./UserDropdown";
 import { ModeToggle } from "@/components/ModeToggleButton";
-import { SearchBar } from "@upstash/search-ui"
-import "@upstash/search-ui/dist/index.css"
-import { Search } from "@upstash/search"
+import { SearchBar } from "@upstash/search-ui";
+import "@upstash/search-ui/dist/index.css";
+import { Search } from "@upstash/search";
 import { env } from "@/lib/env";
+import { useRouter } from "next/navigation";
 
 const navigationItems = [
   { name: "Home", href: "/", icon: <Home className="w-4 h-4 mr-2" /> },
@@ -31,13 +32,22 @@ type Courses = {
   price: number;
   level: string[];
   slug: string[];
+};
+
+type Metadata = {
+  id: string[];
+  description: string[];
+  duration: number;
+  fileKey: string[];
 }
 
-const index = client.index<{ title: string }>("main")
+const index = client.index<Courses, Metadata>("main");
 
 export function Navbar() {
   const { data: session } = authClient.useSession();
   const isAdmin = session?.user?.role?.toLowerCase() === "admin";
+
+  const router = useRouter(); 
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -57,7 +67,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="sm:hidden md:flex items-center space-x-1 overflow-x-auto whitespace-nowrap no-scrollbar">
             {navigationItems.map((item) => (
               <Button
                 key={item.name}
@@ -73,19 +83,21 @@ export function Navbar() {
 
         {/* --- Right: Search, Admin, Mode, User --- */}
         <div className="flex items-center space-x-4">
-          {/* Search bar - Wider on desktop */}
-          <div className="w-48 lg:w-56">
+          {/* Search bar */}
+          <div className="w-36 lg:w-56">
             <SearchBar.Dialog>
               <SearchBar.DialogTrigger placeholder="Search course..." />
               <SearchBar.DialogContent>
                 <SearchBar.Input placeholder="Type to search course..." />
                 <SearchBar.Results
-                  searchFn={(query) => {
-                    return index.search({ query, limit: 10, reranking: true })
-                  }}
+                  searchFn={(query) => index.search({ query, limit: 10, reranking: true })}
                 >
                   {(result) => (
-                    <SearchBar.Result value={result.id} key={result.id}>
+                    <SearchBar.Result
+                      value={result.id}
+                      key={result.id}
+                      onSelect={() => router.push(`/courses/${result.content.slug}`)}
+                    >
                       <SearchBar.ResultIcon>
                         <FileText className="text-gray-600" />
                       </SearchBar.ResultIcon>
@@ -123,7 +135,7 @@ export function Navbar() {
 
       {/* --- Mobile Navigation --- */}
       {session && (
-        <nav className="md:hidden border-t py-2 px-4 flex justify-around bg-background/80 backdrop-blur">
+        <nav className="sm:hidden">
           {navigationItems.map((item) => (
             <Button
               key={item.name}
@@ -138,7 +150,6 @@ export function Navbar() {
             </Button>
           ))}
 
-          {/* Admin shortcut in mobile view */}
           {isAdmin && (
             <Button
               asChild
