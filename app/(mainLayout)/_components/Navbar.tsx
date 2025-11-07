@@ -14,6 +14,7 @@ import "@upstash/search-ui/dist/index.css";
 import { Search } from "@upstash/search";
 import { env } from "@/lib/env";
 import { useRouter } from "next/navigation";
+import { SearchBarInput } from "@/components/SeachBar";
 
 const navigationItems = [
   { name: "Home", href: "/", icon: <Home className="w-4 h-4" /> },
@@ -74,99 +75,15 @@ export function Navbar() {
 
             {/* Desktop Search */}
             <div className="w-40  md:flex ">
-              <SearchBar.Dialog>
-                <SearchBar.DialogTrigger placeholder="Search course..." />
-                <SearchBar.DialogContent>
-                  <SearchBar.Input placeholder="Type to search course..." />
-                  <SearchBar.Results
-                    searchFn={(query) =>
-                      index.search({ query, limit: 10, reranking: true })
-                    }
-                  >
-                    {(result) => (
-                      <SearchBar.Result
-                        value={result.id}
-                        key={result.id}
-                        onSelect={() =>
-                          router.push(`/courses/${result.content.slug}`)
-                        }
-                      >
-                        <SearchBar.ResultIcon>
-                          <FileText className="text-gray-600" />
-                        </SearchBar.ResultIcon>
-                        <SearchBar.ResultContent>
-                          <SearchBar.ResultTitle>
-                            {result.content.title}
-                          </SearchBar.ResultTitle>
-                          <p className="text-xs text-gray-500 mt-0.5">Course</p>
-                        </SearchBar.ResultContent>
-                      </SearchBar.Result>
-                    )}
-                  </SearchBar.Results>
-                </SearchBar.DialogContent>
-              </SearchBar.Dialog>
+              <SearchBarInput />
             </div>
-
-            {/* {isAdmin && (
-              <Button
-                asChild
-                variant="outline"
-                className="md:inline-flex items-center gap-1 text-primary border-primary"
-              >
-                <Link href="/admin-dashboard">
-                  <Shield className="w-4 h-4" />
-                  Admin
-                </Link>
-              </Button>
-            )} */}
-
             <ModeToggle />
             <UserDropdown />
 
-            {/* Hamburger (mobile) */}
-            <button
-              className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={
-                    mobileOpen
-                      ? "M6 18L18 6M6 6l12 12"
-                      : "M4 6h16M4 12h16M4 18h16"
-                  }
-                />
-              </svg>
-            </button>
+            
           </div>
         </div>
-
-
-
-        {/* --- Desktop Navigation + Search (hidden on mobile) --- */}
-        <div className="hidden md:flex items-center justify-between mt-2">
-          <nav className="flex space-x-3">
-            {navigationItems.map((item) => (
-              <Button key={item.name} asChild variant="ghost" className="px-3">
-                <Link href={item.href} className="flex items-center gap-1">
-                  {item.icon}
-                  {item.name}
-                </Link>
-              </Button>
-            ))}
-          </nav>
-
-
-        </div>
+        
 
         {/* --- Mobile Menu (navigation + search) --- */}
         {mobileOpen && (
@@ -201,41 +118,8 @@ export function Navbar() {
                 </Button>
               )}
 
-              <div className="mt-2 w-full">
-                <SearchBar.Dialog>
-                  <SearchBar.DialogTrigger placeholder="Search course..." />
-                  <SearchBar.DialogContent>
-                    <SearchBar.Input placeholder="Type to search course..." />
-                    <SearchBar.Results
-                      searchFn={(query) =>
-                        index.search({ query, limit: 10, reranking: true })
-                      }
-                    >
-                      {(result) => (
-                        <SearchBar.Result
-                          value={result.id}
-                          key={result.id}
-                          onSelect={() => {
-                            setMobileOpen(false);
-                            router.push(`/courses/${result.content.slug}`);
-                          }}
-                        >
-                          <SearchBar.ResultIcon>
-                            <FileText className="text-gray-600" />
-                          </SearchBar.ResultIcon>
-                          <SearchBar.ResultContent>
-                            <SearchBar.ResultTitle>
-                              {result.content.title}
-                            </SearchBar.ResultTitle>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              Course
-                            </p>
-                          </SearchBar.ResultContent>
-                        </SearchBar.Result>
-                      )}
-                    </SearchBar.Results>
-                  </SearchBar.DialogContent>
-                </SearchBar.Dialog>
+              <div className="mt-2 w-fit">
+                <SearchBarInput />
               </div>
             </nav>
           </div>

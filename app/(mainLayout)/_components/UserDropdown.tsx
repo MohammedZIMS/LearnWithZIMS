@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useSignout } from "@/hooks/use-signout";
 import { authClient } from "@/lib/auth-client";
-import { BookOpen, Home, LayoutDashboard, LogIn, LogOut } from "lucide-react";
+import { BookOpen, Home, LayoutDashboard, LogIn, LogOut, Shield } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -13,11 +13,13 @@ const navigationItems = [
     { name: "Home", href: "/", icon: <Home className="w-4 h-4 mr-2" /> },
     { name: "Courses", href: "/courses", icon: <BookOpen className="w-4 h-4 mr-2" /> },
     { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="w-4 h-4 mr-2" /> },
+
 ]
 
 export function UserDropdown() {
     const { data: session, isPending } = authClient.useSession();
     const handleSignout = useSignout();
+    const isAdmin = session?.user?.role?.toLowerCase() === "admin";
 
     return (
         <>
@@ -30,8 +32,8 @@ export function UserDropdown() {
                         >
                             <Avatar className="h-8 w-8">
                                 <AvatarImage
-                                    src={ session.user.image ||""}
-                                    alt={ session.user?.name || "User"}
+                                    src={session.user.image || ""}
+                                    alt={session.user?.name || "User"}
                                 />
                                 <AvatarFallback className="bg-primary text-white font-medium">
                                     {session.user?.name
@@ -63,7 +65,22 @@ export function UserDropdown() {
                                         {item.name}
                                     </Link>
                                 </DropdownMenuItem>
+
+
                             ))}
+
+                            {isAdmin && (
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="md:inline-flex cursor-pointer w-full items-center gap-1 text-primary border-primary"
+                                >
+                                    <Link href="/admin-dashboard">
+                                        <Shield className="w-4 h-4" />
+                                        Admin
+                                    </Link>
+                                </Button>
+                            )}
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleSignout} className="cursor-pointer">
