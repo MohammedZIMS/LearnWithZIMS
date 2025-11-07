@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConstructUrl } from "@/hooks/use-construct-url";
+import { cn } from "@/lib/utils";
 import { School, TimerIcon, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -58,7 +59,7 @@ export function PublicCourseCard({ data }: iAppProps) {
         </div>
 
         {/* Content */}
-        <CardContent className="p-5 space-y-4">
+        <CardContent className="p-5 space-y-4 dark:bg-gray-900">
           {/* Title */}
           <Link
             className="block font-semibold text-lg line-clamp-2 hover:text-primary transition-colors"
@@ -96,7 +97,7 @@ export function PublicCourseCard({ data }: iAppProps) {
         </CardContent>
 
         {/* Footer */}
-        <CardFooter className="flex justify-between items-center p-5 border-t border-gray-200 dark:border-gray-700">
+        <CardFooter className="flex justify-between items-center p-5 border-t border-gray-200 dark:border-gray-700 dark:bg-gray-900">
           <div className="space-y-1">
             <span className="text-xl font-bold text-blue-600">
               {data.price === 0 ? "Free" : `$${data.price}`}
@@ -105,7 +106,7 @@ export function PublicCourseCard({ data }: iAppProps) {
           </div>
 
           <Link
-            className={buttonVariants({ variant: "default" })}
+            className={ cn(buttonVariants({ variant: "default"}), "dark:text-white dark:hover:text-white hover:text-white transition-colors duration-300")} 
             href={`/courses/${data.slug}`}
           >
             Learn More

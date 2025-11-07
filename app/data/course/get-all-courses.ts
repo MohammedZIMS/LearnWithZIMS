@@ -42,3 +42,21 @@ export async function getAllCourse() {
 }
 
 export type PublicCourseType = Awaited<ReturnType<typeof getAllCourse>>[0];
+
+
+// ✅ Get popular courses based on average rating
+export async function popularGetCourse() {
+  const allCourses = await getAllCourse();
+
+  // Sort by average rating (high → low) and then by createdAt (newest first)
+  const sortedCourses = allCourses.sort((a, b) => {
+    if (b.averageRating === a.averageRating) {
+      // Keep newer first if ratings are same
+      return 0;
+    }
+    return b.averageRating - a.averageRating;
+  });
+
+  // Return top N courses (e.g., top 6)
+  return sortedCourses.slice(0, 6);
+}

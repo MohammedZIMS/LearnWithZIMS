@@ -71,6 +71,13 @@ Install the **Resend** package for email services:
 ```bash
 pnpm add resend
 ```
+---
+
+### Search
+In your Next.js app, install our @upstash/redis package:
+```bash
+pnpm install @upstash/search
+```
 
 ---
 
