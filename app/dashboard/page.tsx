@@ -95,8 +95,9 @@ export default async function DashboardPage() {
             href="/courses"
           />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {availableCourses.map((course) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* show only 6 course */}
+            {availableCourses.slice(0, 6).map((course) => (
               <PublicCourseCard key={course.id} data={course} />
             ))}
           </div>

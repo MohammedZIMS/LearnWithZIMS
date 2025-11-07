@@ -107,7 +107,7 @@ export function Navbar() {
               </SearchBar.Dialog>
             </div>
 
-            {isAdmin && (
+            {/* {isAdmin && (
               <Button
                 asChild
                 variant="outline"
@@ -118,14 +118,14 @@ export function Navbar() {
                   Admin
                 </Link>
               </Button>
-            )}
+            )} */}
 
             <ModeToggle />
             <UserDropdown />
 
             {/* Hamburger (mobile) */}
             <button
-              className="md:hidden p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
               <svg
@@ -170,7 +170,7 @@ export function Navbar() {
 
         {/* --- Mobile Menu (navigation + search) --- */}
         {mobileOpen && (
-          <div className="md:hidden mt-2 border-t pt-2">
+          <div className=" mt-2 border-t pt-2">
             <nav className="flex flex-col space-y-1">
               {navigationItems.map((item) => (
                 <Button

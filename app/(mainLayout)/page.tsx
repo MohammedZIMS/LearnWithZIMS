@@ -14,7 +14,7 @@ export default function Home() {
 
         <div className="flex items-center justify-between py-6">
 
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-center">
+          <h2 className="text-xl md:text-4xl font-bold tracking-tighter text-center">
             Explore Our Popular Courses
           </h2>
 

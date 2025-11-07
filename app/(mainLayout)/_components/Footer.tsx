@@ -45,13 +45,13 @@ export function FooterSction() {
                 <div>
                     <h4 className="font-semibold mb-3">Follow Us</h4>
                     <div className="flex gap-3">
-                        <Link href="#" aria-label="LinkedIn" className="hover:text-primary transition-colors">
+                        <Link href="https://www.linkedin.com/in/md-zahidul-islam-mehedi-31aa07321/" aria-label="LinkedIn" className="hover:text-primary transition-colors">
                             <IconBrandLinkedin />
                         </Link>
-                        <Link href="#" aria-label="Facebook" className="hover:text-primary transition-colors">
+                        <Link href="https://www.facebook.com/md.zahidul.islam.mehedi.2024" aria-label="Facebook" className="hover:text-primary transition-colors">
                             <IconBrandFacebook />
                         </Link>
-                        <Link href="#" aria-label="YouTube" className="hover:text-primary transition-colors">
+                        <Link href="https://www.youtube.com/@MohammedZIMS" aria-label="YouTube" className="hover:text-primary transition-colors">
                             <IconBrandYoutube />
                         </Link>
                     </div>
