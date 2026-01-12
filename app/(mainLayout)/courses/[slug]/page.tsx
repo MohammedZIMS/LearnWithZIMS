@@ -89,16 +89,16 @@ export default async function SlugPage({ params }: { params: Params }) {
       {/* Main Content */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 -mt-8">
         {/* Left Column */}
-        <div className="order-1 lg:col-span-2">
+        <div className="order-1 lg:col-span-2 dark:bg-gray-900">
 
           {/* Course Description */}
           <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <h2 className="text-2xl font-bold mb-4 flex items-center dark:bg-gray-900 gap-2">
               <BookOpen className="text-blue-600" size={20} />
               Course Description
             </h2>
 
-            <div>
+            <div className="dark:bg-gray-900">
               <RenderDescription json={JSON.parse(course.description)} />
             </div>
           </div>

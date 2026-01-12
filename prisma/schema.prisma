@@ -218,6 +218,10 @@ model LectureProgress {
   @@unique([userId, lectureId])
 }
 
+model Intructor {
+  
+}
+
 
 model Certificate {
   id          String   @id @default(uuid())
