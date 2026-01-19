@@ -62,7 +62,7 @@ export function PublicCourseCard({ data }: iAppProps) {
         <CardContent className="p-5 space-y-4 dark:bg-gray-900">
           {/* Title */}
           <Link
-            className="block font-semibold text-lg line-clamp-2 hover:text-primary transition-colors"
+            className="block font-semibold text-lg line-clamp-1 hover:text-primary transition-colors"
             href={`/courses/${data.slug}`}
           >
             {data.title}
@@ -90,9 +90,9 @@ export function PublicCourseCard({ data }: iAppProps) {
         </div>
 
         {/* Description */}
-        <p className="line-clamp-3 text-sm text-muted-foreground">
+        {/* <p className="line-clamp-3 text-sm text-muted-foreground">
           {data.smallDescription}
-        </p>
+        </p> */}
         
         </CardContent>
 
